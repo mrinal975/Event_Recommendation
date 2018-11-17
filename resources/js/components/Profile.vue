@@ -18,7 +18,10 @@
                                     <h4>
                                         {{user.name | empty}}
                                     </h4>
-                                    <button class="btn btn-info" v-if="$gate.userId()!=user.id"> Follow</button>
+                                    <br>
+                                    <button class="btn btn-info" v-if="$gate.userId()!=user.id" @click="followOrNotProfile()">
+                                         {{followOrNot}}
+                                         </button>
                                     <br><br><br><br><br>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
@@ -31,7 +34,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-work">
-                           <h4>Interest</h4>        
+                            <br>
+                           <h4>Interest list</h4>        
        <table class="table table-borderless democlass">
            
     <tbody>
@@ -200,6 +204,7 @@
 export default {
   data() {
     return {
+      followOrNot: "",
       editmode: false,
       errors: "",
       errorInterest: "",
@@ -229,6 +234,16 @@ export default {
     };
   },
   methods: {
+    followOrNotProfile() {
+      axios
+        .get("http://127.0.0.1:8000/api/follow/" + this.id)
+        .then(({ data }) => (this.followOrNot = data));
+    },
+    followStaus() {
+      axios
+        .get("http://127.0.0.1:8000/api/followStaus/" + this.id)
+        .then(({ data }) => ((this.followOrNot = data), console.log(data)));
+    },
     showProfileImage(profileImage) {
       if (profileImage == "profile" || profileImage == null) {
         let Image = "/img/" + profileImage;
@@ -348,6 +363,7 @@ export default {
   created() {
     this.loadUserInfo();
     this.loadInterestOn();
+    this.followStaus();
   }
 };
 </script>

@@ -18,6 +18,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResource('event','API\EventController');
 Route::apiResource('Profile','API\ProfileController');
-Route::get('interest/{id}', 'API\ProfileController@interstShow');
-Route::post('personalInterest', 'API\ProfileController@interstStore');
-Route::put('InterestUpdate/{id}', 'API\ProfileController@interstUpdate');
+Route::get('interest/{id}', 'API\ProfileController@interestShow');
+Route::post('personalInterest', 'API\ProfileController@interestStore');
+Route::put('InterestUpdate/{id}', 'API\ProfileController@interestUpdate');
+Route::get('follow/{id}', 'API\FriendController@followOrNot');
+Route::get('followStaus/{id}', 'API\FriendController@followStaus');
+
+Route::get('insterestupdate/{id}', 'API\InterestedOnEventController@insterestupdate');
+Route::get('goingupdate/{id}', 'API\InterestedOnEventController@goingupdate');
+Route::get('search', 'API\SearchController@search');

@@ -62,6 +62,9 @@ let routes = [
 ];
 
 const router = new VueRouter({
+    // mode: "history",
+    // base: subscribersLinks.baseUri,
+    linkActiveClass: "active",
     routes // short for `routes: routes`
 });
 

@@ -15,10 +15,8 @@ class CreateEventDescriptionsTable extends Migration
     {
         Schema::create('event_descriptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('event_id')->unsigned()->index();
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            $table->integer('user_id')->unsigned()->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('event_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

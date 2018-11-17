@@ -13,7 +13,7 @@
                         <br>
                         <div class="row justify-content-center">
 				    <ul class="event-list">
-					<li v-for="event in events" :key="event.id">
+					<li v-for="(event,index) in events" :key="index" :value="event.value">
 						<time>
 							<span class="day">{{event.eventStartDate | EventDate}}</span>
 							<span class="month">{{event.eventStartDate | EventMonth}}</span>
@@ -22,15 +22,24 @@
 						</time>
 						<img alt="Event Image" :src="showEventImage(event.eventImage)" />
 						<div class="info">
-                            <router-link  v-bind:to="'event/'+event.id">
-							<h2 class="title">{{event.eventName}}</h2>
-                            </router-link>
+              <router-link  v-bind:to="'event/'+event.id">
+							<h2 class="title">{{event.eventName}} Index - {{index}}</h2>
+              </router-link>
                            
-							<p class="desc">Bar Hopping in Erie, Pa.</p>
+							<p class="desc">Bar Hopping in Erie, Pa.Bar Hopping in Erie, Pa</p>
+               
 							<ul>
-								<li style="width:33%;">1 <span class="glyphicon glyphicon-ok"></span></li>
-								<li style="width:34%;">3 <span class="fa fa-question"></span></li>
-								<li style="width:33%;">103 <span class="fa fa-envelope"></span></li>
+								<li style="width:40%;" >
+                  <a class="glyphicon glyphicon-ok" @click="goingOrNot(index,event.id)">
+                 {{event.goingstatus}}
+                  </a></li>
+								<li style="width:40%;">
+
+                  <a class="glyphicon glyphicon-ok" @click="InterestedOrNot(index,event.id)">
+                  {{event.intereststatus}}
+                  </a>
+                 </li>
+								<li style="width:20%;">103 Going</li>
 							</ul>
 						</div>
 						<div class="social">
@@ -148,6 +157,9 @@
 export default {
   data() {
     return {
+      search: "",
+      InterestStatust: "Interested",
+      goStatus: "Going",
       editmode: false,
       events: {},
       form: new Form({
@@ -166,6 +178,16 @@ export default {
     };
   },
   methods: {
+    goingOrNot(index, eventid) {
+      axios
+        .get("http://127.0.0.1:8000/api/goingupdate/" + eventid)
+        .then(({ data }) => (this.events[index]["goingstatus"] = data));
+    },
+    InterestedOrNot(index, eventid) {
+      axios
+        .get("http://127.0.0.1:8000/api/insterestupdate/" + eventid)
+        .then(({ data }) => (this.events[index]["intereststatus"] = data));
+    },
     showEventImage(eventImage) {
       let photo = "img/event/" + eventImage;
       return photo;

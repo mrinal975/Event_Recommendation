@@ -29,7 +29,8 @@ class EventController extends Controller
 
     public function index()
     {
-        return Event::latest()->paginate(5);
+        $data=Event::latest()->paginate(5);
+        return  EventCollection::collection($data);
     }
 
     /**

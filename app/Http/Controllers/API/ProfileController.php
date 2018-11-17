@@ -115,18 +115,18 @@ class ProfileController extends Controller
     {
         // 
     }
-    public function interstShow($id){
+    public function interestShow($id){
         $data=UserInterest::where('user_id',$id)->get();
         return InterestCollection::collection($data);
     }
-    public function interstStore(ProfileRequest $request){
+    public function interestStore(ProfileRequest $request){
         $UserInterest=new UserInterest;
         $UserInterest->user_id=Auth::user('api')->id;
         $UserInterest->Interest_on=$request->Interest_on;
         $UserInterest->save();
         return 1; 
     }
-    public function interstUpdate(ProfileRequest $request, $id){
+    public function interestUpdate(ProfileRequest $request, $id){
         $interest=UserInterest::findOrfail($id);
         $interest->update($request->all());
         return 1;

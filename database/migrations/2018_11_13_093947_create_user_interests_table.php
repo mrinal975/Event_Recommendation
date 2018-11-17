@@ -15,8 +15,7 @@ class CreateUserInterestsTable extends Migration
     {
         Schema::create('user_interests', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('user_id');
             $table->string('Interest_on');
             $table->timestamps();
         });

@@ -30767,6 +30767,9 @@ var routes = [{ path: "/event/:id", component: __webpack_require__(174) }, { pat
 }, { path: "/profile/:id", component: __webpack_require__(186) }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
+    // mode: "history",
+    // base: subscribersLinks.baseUri,
+    linkActiveClass: "active",
     routes: routes // short for `routes: routes`
 });
 
@@ -72388,10 +72391,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      search: "",
+      InterestStatust: "Interested",
+      goStatus: "Going",
       editmode: false,
       events: {},
       form: new Form({
@@ -72411,6 +72426,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
+    goingOrNot: function goingOrNot(index, eventid) {
+      var _this = this;
+
+      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref) {
+        var data = _ref.data;
+        return _this.events[index]["goingstatus"] = data;
+      });
+    },
+    InterestedOrNot: function InterestedOrNot(index, eventid) {
+      var _this2 = this;
+
+      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.events[index]["intereststatus"] = data;
+      });
+    },
     showEventImage: function showEventImage(eventImage) {
       var photo = "img/event/" + eventImage;
       return photo;
@@ -72420,7 +72451,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       return Image;
     },
     eventPicture: function eventPicture(e) {
-      var _this = this;
+      var _this3 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -72443,24 +72474,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
 
       reader.onloadend = function (file) {
-        _this.form.eventImage = reader.result;
+        _this3.form.eventImage = reader.result;
       };
       reader.readAsDataURL(file);
     },
     updateEvent: function updateEvent() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.form.put("api/event/" + this.form.id).then(function () {
         //success
-        _this2.$Progress.start();
-        _this2.loadEvents();
+        _this4.$Progress.start();
+        _this4.loadEvents();
         $("#exampleModal").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
-        _this2.$Progress.finish();
+        _this4.$Progress.finish();
       }).catch(function () {
         //error
         swal("Fail!", "updated failed", "warning");
-        _this2.$Progress.fail();
+        _this4.$Progress.fail();
       });
     },
     cancelEdit: function cancelEdit() {
@@ -72476,15 +72507,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(event);
     },
     loadEvents: function loadEvents() {
-      var _this3 = this;
+      var _this5 = this;
 
-      axios.get("api/event").then(function (_ref) {
-        var data = _ref.data;
-        return _this3.events = data.data;
+      axios.get("api/event").then(function (_ref3) {
+        var data = _ref3.data;
+        return _this5.events = data.data;
       });
     },
     deleteEvent: function deleteEvent(id) {
-      var _this4 = this;
+      var _this6 = this;
 
       swal({
         title: "Are you sure?",
@@ -72496,29 +72527,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         //send request for delete
-        _this4.form.delete("api/event/" + id).then(function () {
+        _this6.form.delete("api/event/" + id).then(function () {
           if (result.value) {
             swal("Deleted!", "Your file has been deleted.", "success");
           }
-          _this4.loadEvents();
+          _this6.loadEvents();
         }).catch(function () {
           swal("Failed!", "There was something wrong.", "warning");
         });
       });
     },
     createEvent: function createEvent() {
-      var _this5 = this;
+      var _this7 = this;
 
       this.$Progress.start();
-      this.form.post("api/event").then(function (_ref2) {
-        var data = _ref2.data;
+      this.form.post("api/event").then(function (_ref4) {
+        var data = _ref4.data;
 
-        _this5.loadEvents();
+        _this7.loadEvents();
         toast({
           type: "success",
           title: "Event created successfully"
         });
-        _this5.$Progress.finish();
+        _this7.$Progress.finish();
         $("#exampleModal").modal("hide");
       });
     }
@@ -72565,124 +72596,180 @@ var render = function() {
               _c(
                 "ul",
                 { staticClass: "event-list" },
-                _vm._l(_vm.events, function(event) {
-                  return _c("li", { key: event.id }, [
-                    _c("time", [
-                      _c("span", { staticClass: "day" }, [
-                        _vm._v(
-                          _vm._s(_vm._f("EventDate")(event.eventStartDate))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "month" }, [
-                        _vm._v(
-                          _vm._s(_vm._f("EventMonth")(event.eventStartDate))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "year" }, [
-                        _vm._v(
-                          _vm._s(_vm._f("EventYear")(event.eventStartDate))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "time" }, [
-                        _vm._v(
-                          _vm._s(_vm._f("EventTime")(event.eventStartTime))
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("img", {
-                      attrs: {
-                        alt: "Event Image",
-                        src: _vm.showEventImage(event.eventImage)
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "info" },
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "event/" + event.id } },
-                          [
-                            _c("h2", { staticClass: "title" }, [
-                              _vm._v(_vm._s(event.eventName))
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "desc" }, [
-                          _vm._v("Bar Hopping in Erie, Pa.")
+                _vm._l(_vm.events, function(event, index) {
+                  return _c(
+                    "li",
+                    { key: index, attrs: { value: event.value } },
+                    [
+                      _c("time", [
+                        _c("span", { staticClass: "day" }, [
+                          _vm._v(
+                            _vm._s(_vm._f("EventDate")(event.eventStartDate))
+                          )
                         ]),
                         _vm._v(" "),
-                        _vm._m(0, true)
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "social" }, [
-                      _c("ul", [
-                        _vm.$gate.userId() == event.createdBy
-                          ? _c(
-                              "li",
-                              {
-                                staticClass: "facebook",
-                                staticStyle: { width: "33%" }
-                              },
-                              [
-                                _c(
-                                  "a",
-                                  {
-                                    on: {
-                                      click: function($event) {
-                                        _vm.editEvent(event)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-edit",
-                                      attrs: { title: "Edit Event" }
-                                    })
-                                  ]
-                                )
-                              ]
-                            )
-                          : _vm._e(),
+                        _c("span", { staticClass: "month" }, [
+                          _vm._v(
+                            _vm._s(_vm._f("EventMonth")(event.eventStartDate))
+                          )
+                        ]),
                         _vm._v(" "),
-                        _vm.$gate.userId() == event.createdBy
-                          ? _c(
-                              "li",
-                              {
-                                staticClass: "twitter",
-                                staticStyle: { width: "34%" }
-                              },
-                              [
-                                _c(
-                                  "a",
-                                  {
-                                    on: {
-                                      click: function($event) {
-                                        _vm.deleteEvent(event.id)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-trash",
-                                      attrs: { title: "Delete Event" }
-                                    })
-                                  ]
+                        _c("span", { staticClass: "year" }, [
+                          _vm._v(
+                            _vm._s(_vm._f("EventYear")(event.eventStartDate))
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "time" }, [
+                          _vm._v(
+                            _vm._s(_vm._f("EventTime")(event.eventStartTime))
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("img", {
+                        attrs: {
+                          alt: "Event Image",
+                          src: _vm.showEventImage(event.eventImage)
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "info" },
+                        [
+                          _c(
+                            "router-link",
+                            { attrs: { to: "event/" + event.id } },
+                            [
+                              _c("h2", { staticClass: "title" }, [
+                                _vm._v(
+                                  _vm._s(event.eventName) +
+                                    " Index - " +
+                                    _vm._s(index)
                                 )
-                              ]
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "desc" }, [
+                            _vm._v(
+                              "Bar Hopping in Erie, Pa.Bar Hopping in Erie, Pa"
                             )
-                          : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticStyle: { width: "40%" } }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "glyphicon glyphicon-ok",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.goingOrNot(index, event.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                 " +
+                                      _vm._s(event.goingstatus) +
+                                      "\n                  "
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticStyle: { width: "40%" } }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "glyphicon glyphicon-ok",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.InterestedOrNot(index, event.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                  " +
+                                      _vm._s(event.intereststatus) +
+                                      "\n                  "
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticStyle: { width: "20%" } }, [
+                              _vm._v("103 Going")
+                            ])
+                          ])
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "social" }, [
+                        _c("ul", [
+                          _vm.$gate.userId() == event.createdBy
+                            ? _c(
+                                "li",
+                                {
+                                  staticClass: "facebook",
+                                  staticStyle: { width: "33%" }
+                                },
+                                [
+                                  _c(
+                                    "a",
+                                    {
+                                      on: {
+                                        click: function($event) {
+                                          _vm.editEvent(event)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-edit",
+                                        attrs: { title: "Edit Event" }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.$gate.userId() == event.createdBy
+                            ? _c(
+                                "li",
+                                {
+                                  staticClass: "twitter",
+                                  staticStyle: { width: "34%" }
+                                },
+                                [
+                                  _c(
+                                    "a",
+                                    {
+                                      on: {
+                                        click: function($event) {
+                                          _vm.deleteEvent(event.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-trash",
+                                        attrs: { title: "Delete Event" }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ])
                       ])
-                    ])
-                  ])
+                    ]
+                  )
                 })
               )
             ])
@@ -73326,29 +73413,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", [
-      _c("li", { staticStyle: { width: "33%" } }, [
-        _vm._v("1 "),
-        _c("span", { staticClass: "glyphicon glyphicon-ok" })
-      ]),
-      _vm._v(" "),
-      _c("li", { staticStyle: { width: "34%" } }, [
-        _vm._v("3 "),
-        _c("span", { staticClass: "fa fa-question" })
-      ]),
-      _vm._v(" "),
-      _c("li", { staticStyle: { width: "33%" } }, [
-        _vm._v("103 "),
-        _c("span", { staticClass: "fa fa-envelope" })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -74246,10 +74311,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      followOrNot: "",
       editmode: false,
       errors: "",
       errorInterest: "",
@@ -74280,6 +74350,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
+    followOrNotProfile: function followOrNotProfile() {
+      var _this = this;
+
+      axios.get("http://127.0.0.1:8000/api/follow/" + this.id).then(function (_ref) {
+        var data = _ref.data;
+        return _this.followOrNot = data;
+      });
+    },
+    followStaus: function followStaus() {
+      var _this2 = this;
+
+      axios.get("http://127.0.0.1:8000/api/followStaus/" + this.id).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.followOrNot = data, console.log(data);
+      });
+    },
     showProfileImage: function showProfileImage(profileImage) {
       if (profileImage == "profile" || profileImage == null) {
         var Image = "/img/" + profileImage;
@@ -74294,7 +74380,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       return Image;
     },
     ProfilePicture: function ProfilePicture(e) {
-      var _this = this;
+      var _this3 = this;
 
       console.log("uploaded");
       var file = e.target.files[0];
@@ -74318,8 +74404,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
 
       reader.onloadend = function (file) {
-        _this.profile.image = reader.result;
-        console.log(_this.profile.image);
+        _this3.profile.image = reader.result;
+        console.log(_this3.profile.image);
       };
       reader.readAsDataURL(file);
     },
@@ -74332,12 +74418,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(data);
     },
     updateInterst: function updateInterst() {
-      var _this2 = this;
+      var _this4 = this;
 
-      this.form.put("api/InterestUpdate/" + this.form.id).then(function (_ref) {
-        var data = _ref.data;
+      this.form.put("api/InterestUpdate/" + this.form.id).then(function (_ref3) {
+        var data = _ref3.data;
 
-        _this2.loadInterestOn();
+        _this4.loadInterestOn();
         toast({
           type: "success",
           title: "Updated successfully"
@@ -74346,17 +74432,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     addInterst: function addInterst() {
-      var _this3 = this;
+      var _this5 = this;
 
-      this.form.post("http://127.0.0.1:8000/api/personalInterest").then(function (_ref2) {
-        var data = _ref2.data;
+      this.form.post("http://127.0.0.1:8000/api/personalInterest").then(function (_ref4) {
+        var data = _ref4.data;
 
-        _this3.loadInterestOn();
+        _this5.loadInterestOn();
         toast({
           type: "success",
           title: "created successfully"
         });
-        _this3.$Progress.finish();
+        _this5.$Progress.finish();
         $("#Profile_Test_Model").modal("hide");
       });
     },
@@ -74369,40 +74455,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(profile);
     },
     loadInterestOn: function loadInterestOn() {
-      var _this4 = this;
+      var _this6 = this;
 
-      axios.get("http://127.0.0.1:8000/api/interest/" + this.id).then(function (_ref3) {
-        var data = _ref3.data;
-        return _this4.interests = data.data;
+      axios.get("http://127.0.0.1:8000/api/interest/" + this.id).then(function (_ref5) {
+        var data = _ref5.data;
+        return _this6.interests = data.data;
       });
     },
     loadUserInfo: function loadUserInfo() {
-      var _this5 = this;
+      var _this7 = this;
 
-      axios.get("http://127.0.0.1:8000/api/Profile/" + this.id).then(function (_ref4) {
-        var data = _ref4.data;
-        return _this5.user = data.data, _this5.profile = data.data;
+      axios.get("http://127.0.0.1:8000/api/Profile/" + this.id).then(function (_ref6) {
+        var data = _ref6.data;
+        return _this7.user = data.data, _this7.profile = data.data;
       });
     },
     updateinformation: function updateinformation() {
-      var _this6 = this;
+      var _this8 = this;
 
       axios.post("http://127.0.0.1:8000/api/Profile ", {
         body: this.profile
       }).then(function (response) {
-        _this6.$Progress.start();
-        _this6.loadUserInfo();
+        _this8.$Progress.start();
+        _this8.loadUserInfo();
         $("#Profile_Model").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
-        _this6.$Progress.finish();
+        _this8.$Progress.finish();
       }).catch(function (e) {
-        _this6.errors = "Name And email field is required";
+        _this8.errors = "Name And email field is required";
       });
     }
   },
   created: function created() {
     this.loadUserInfo();
     this.loadInterestOn();
+    this.followStaus();
   }
 });
 
@@ -74443,10 +74530,27 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
+                        _c("br"),
+                        _vm._v(" "),
                         _vm.$gate.userId() != _vm.user.id
-                          ? _c("button", { staticClass: "btn btn-info" }, [
-                              _vm._v(" Follow")
-                            ])
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-info",
+                                on: {
+                                  click: function($event) {
+                                    _vm.followOrNotProfile()
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                       " +
+                                    _vm._s(_vm.followOrNot) +
+                                    "\n                                       "
+                                )
+                              ]
+                            )
                           : _vm._e(),
                         _vm._v(" "),
                         _c("br"),
@@ -74463,7 +74567,9 @@ var render = function() {
                   _c("div", { staticClass: "row" }, [
                     _c("div", { staticClass: "col-md-4" }, [
                       _c("div", { staticClass: "profile-work" }, [
-                        _c("h4", [_vm._v("Interest")]),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("h4", [_vm._v("Interest list")]),
                         _vm._v(" "),
                         _c(
                           "table",

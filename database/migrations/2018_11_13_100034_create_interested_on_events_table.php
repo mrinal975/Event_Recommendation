@@ -15,11 +15,11 @@ class CreateInterestedOnEventsTable extends Migration
     {
         Schema::create('interested_on_events', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('event_id')->unsigned()->index();
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            $table->integer('user_id')->unsigned()->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-             $table->string('Interest_tyoe');
+            $table->integer('user_id');
+            $table->integer('event_id');
+            $table->integer('Interest_type')->nullable();
+            $table->integer('previous_interst')->nullable();
+            $table->integer('previous_going')->nullable();
             $table->timestamps();
         });
     }
