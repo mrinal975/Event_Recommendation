@@ -14,6 +14,8 @@ use Gate;
 use Auth;
 use App\User;
 use App\EventDescription;
+use App\InterestedOnEvent;
+use App\UserInterest;
 
 class EventController extends Controller
 {
@@ -29,8 +31,22 @@ class EventController extends Controller
 
     public function index()
     {
-        $data=Event::latest()->paginate(5);
-        return  EventCollection::collection($data);
+        $adata=array('');
+        $collection =collect(['']);
+        $userId=Auth::user('api')->id;
+        $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(3);
+        foreach ($userInterest as  $interest) {
+             $event=Event::where('eventType','LIKE','%'.strtolower($interest->Interest_on).'%')->get();
+             foreach ($userInterest as $key => $value) {
+                $collection->put($key,$value);
+             }
+             
+        }
+        dd($collection->all());
+        // return $adata;
+        // return count($event);
+        // $data=Event::latest()->paginate(5);
+        // return  EventCollection::collection($a,true, 200);
     }
 
     /**
@@ -47,6 +63,7 @@ class EventController extends Controller
             Image::make($request->eventImage)->save(public_path('img/event/').$name);
             $request->merge(['eventImage'=>$name]);
         }
+
         $event->eventImage=$request->eventImage;
         $event->eventType=$request->eventType;
         $event->eventName=$request->eventName;
@@ -60,12 +77,6 @@ class EventController extends Controller
         $event->save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $Event=Event::findOrFail($id);

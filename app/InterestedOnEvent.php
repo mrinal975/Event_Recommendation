@@ -8,6 +8,6 @@ class InterestedOnEvent extends Model
 {
     //
     protected $fillable = [
-        'user_id', 'user_id', 'Interest_type','previous_interst','previous_going'
+        'user_id', 'Interest_type','previous_interst','previous_going'
     ];
 }

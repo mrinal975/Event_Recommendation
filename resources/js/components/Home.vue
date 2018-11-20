@@ -1,5 +1,16 @@
 <template>
     <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+          <div class="form-group">
+          <input type="text" class="form-control" id="usr" v-model="searchQuery" v-on:keyup="search"  name="username" placeholder="Search events" >
+        </div>
+        </div>
+        <div class="col-sm-3"></div>
+        <div>
+        </div>
+      </div>
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <div class="card card-default"> 
@@ -29,7 +40,7 @@
 							<p class="desc">Bar Hopping in Erie, Pa.Bar Hopping in Erie, Pa</p>
                
 							<ul>
-								<li style="width:40%;" >
+								<li style="width:40%;">
                   <a class="glyphicon glyphicon-ok" @click="goingOrNot(index,event.id)">
                  {{event.goingstatus}}
                   </a></li>
@@ -82,11 +93,11 @@
                 <label for="eventType">Event Type</label>
                 <select class="form-control" id="eventType" v-model=form.eventType 
                 :class="{ 'is-invalid': form.errors.has('eventType') }">
-                    <option value="Music">Music</option>
-                    <option value="Study">Study</option>
-                    <option value="Movie">Movie</option>
-                    <option value ="Work">Work</option>
-                    <option value="Dancing">Dancing</option>
+                    <option value="music">Music</option>
+                    <option value="study">Study</option>
+                    <option value="movie">Movie</option>
+                    <option value ="work">Work</option>
+                    <option value="dancing">Dancing</option>
                 </select>
                 <has-error :form="form" field="eventTypes"></has-error>
             </div>
@@ -157,7 +168,7 @@
 export default {
   data() {
     return {
-      search: "",
+      searchQuery: "",
       InterestStatust: "Interested",
       goStatus: "Going",
       editmode: false,
@@ -173,11 +184,20 @@ export default {
         eventEndDate: "",
         eventEndTime: "",
         eventDescription: "",
-        createdBy: ""
+        createdBy: "",
+        tempdata: ""
       })
     };
   },
   methods: {
+    search() {
+      if (this.searchQuery.length > 0) {
+        console.log("hi" + this.searchQuery);
+        axios
+          .get("http://127.0.0.1:8000/api/search/" + this.searchQuery)
+          .then(({ data }) => (this.events = data.data));
+      }
+    },
     goingOrNot(index, eventid) {
       axios
         .get("http://127.0.0.1:8000/api/goingupdate/" + eventid)

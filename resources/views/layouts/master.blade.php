@@ -19,7 +19,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="form-inline ml-auto">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" v-model="search" >
             </div>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">

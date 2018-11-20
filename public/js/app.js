@@ -72400,11 +72400,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      search: "",
+      searchQuery: "",
       InterestStatust: "Interested",
       goStatus: "Going",
       editmode: false,
@@ -72420,26 +72431,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         eventEndDate: "",
         eventEndTime: "",
         eventDescription: "",
-        createdBy: ""
+        createdBy: "",
+        tempdata: ""
       })
     };
   },
 
   methods: {
-    goingOrNot: function goingOrNot(index, eventid) {
+    search: function search() {
       var _this = this;
 
-      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref) {
-        var data = _ref.data;
-        return _this.events[index]["goingstatus"] = data;
+      if (this.searchQuery.length > 0) {
+        console.log("hi" + this.searchQuery);
+        axios.get("http://127.0.0.1:8000/api/search/" + this.searchQuery).then(function (_ref) {
+          var data = _ref.data;
+          return _this.events = data.data;
+        });
+      }
+    },
+    goingOrNot: function goingOrNot(index, eventid) {
+      var _this2 = this;
+
+      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.events[index]["goingstatus"] = data;
       });
     },
     InterestedOrNot: function InterestedOrNot(index, eventid) {
-      var _this2 = this;
+      var _this3 = this;
 
-      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref2) {
-        var data = _ref2.data;
-        return _this2.events[index]["intereststatus"] = data;
+      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref3) {
+        var data = _ref3.data;
+        return _this3.events[index]["intereststatus"] = data;
       });
     },
     showEventImage: function showEventImage(eventImage) {
@@ -72451,7 +72474,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       return Image;
     },
     eventPicture: function eventPicture(e) {
-      var _this3 = this;
+      var _this4 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -72474,24 +72497,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
 
       reader.onloadend = function (file) {
-        _this3.form.eventImage = reader.result;
+        _this4.form.eventImage = reader.result;
       };
       reader.readAsDataURL(file);
     },
     updateEvent: function updateEvent() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.form.put("api/event/" + this.form.id).then(function () {
         //success
-        _this4.$Progress.start();
-        _this4.loadEvents();
+        _this5.$Progress.start();
+        _this5.loadEvents();
         $("#exampleModal").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
-        _this4.$Progress.finish();
+        _this5.$Progress.finish();
       }).catch(function () {
         //error
         swal("Fail!", "updated failed", "warning");
-        _this4.$Progress.fail();
+        _this5.$Progress.fail();
       });
     },
     cancelEdit: function cancelEdit() {
@@ -72507,15 +72530,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(event);
     },
     loadEvents: function loadEvents() {
-      var _this5 = this;
+      var _this6 = this;
 
-      axios.get("api/event").then(function (_ref3) {
-        var data = _ref3.data;
-        return _this5.events = data.data;
+      axios.get("api/event").then(function (_ref4) {
+        var data = _ref4.data;
+        return _this6.events = data.data;
       });
     },
     deleteEvent: function deleteEvent(id) {
-      var _this6 = this;
+      var _this7 = this;
 
       swal({
         title: "Are you sure?",
@@ -72527,29 +72550,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         //send request for delete
-        _this6.form.delete("api/event/" + id).then(function () {
+        _this7.form.delete("api/event/" + id).then(function () {
           if (result.value) {
             swal("Deleted!", "Your file has been deleted.", "success");
           }
-          _this6.loadEvents();
+          _this7.loadEvents();
         }).catch(function () {
           swal("Failed!", "There was something wrong.", "warning");
         });
       });
     },
     createEvent: function createEvent() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.$Progress.start();
-      this.form.post("api/event").then(function (_ref4) {
-        var data = _ref4.data;
+      this.form.post("api/event").then(function (_ref5) {
+        var data = _ref5.data;
 
-        _this7.loadEvents();
+        _this8.loadEvents();
         toast({
           type: "success",
           title: "Event created successfully"
         });
-        _this7.$Progress.finish();
+        _this8.$Progress.finish();
         $("#exampleModal").modal("hide");
       });
     }
@@ -72570,6 +72593,46 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-sm-3" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-6" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.searchQuery,
+                expression: "searchQuery"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "usr",
+              name: "username",
+              placeholder: "Search events"
+            },
+            domProps: { value: _vm.searchQuery },
+            on: {
+              keyup: _vm.search,
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.searchQuery = $event.target.value
+              }
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-3" }),
+      _vm._v(" "),
+      _c("div")
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-11" }, [
         _c("div", { staticClass: "card card-default" }, [
@@ -72958,25 +73021,25 @@ var render = function() {
                                   }
                                 },
                                 [
-                                  _c("option", { attrs: { value: "Music" } }, [
+                                  _c("option", { attrs: { value: "music" } }, [
                                     _vm._v("Music")
                                   ]),
                                   _vm._v(" "),
-                                  _c("option", { attrs: { value: "Study" } }, [
+                                  _c("option", { attrs: { value: "study" } }, [
                                     _vm._v("Study")
                                   ]),
                                   _vm._v(" "),
-                                  _c("option", { attrs: { value: "Movie" } }, [
+                                  _c("option", { attrs: { value: "movie" } }, [
                                     _vm._v("Movie")
                                   ]),
                                   _vm._v(" "),
-                                  _c("option", { attrs: { value: "Work" } }, [
+                                  _c("option", { attrs: { value: "work" } }, [
                                     _vm._v("Work")
                                   ]),
                                   _vm._v(" "),
                                   _c(
                                     "option",
-                                    { attrs: { value: "Dancing" } },
+                                    { attrs: { value: "dancing" } },
                                     [_vm._v("Dancing")]
                                   )
                                 ]

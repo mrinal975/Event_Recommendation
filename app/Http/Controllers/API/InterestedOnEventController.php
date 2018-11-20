@@ -38,6 +38,7 @@ class InterestedOnEventController extends Controller
         return "Interested";
        }
     }
+
     public function goingupdate($id)
     {
     //    return $id;

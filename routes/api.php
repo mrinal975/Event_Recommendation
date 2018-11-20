@@ -26,4 +26,4 @@ Route::get('followStaus/{id}', 'API\FriendController@followStaus');
 
 Route::get('insterestupdate/{id}', 'API\InterestedOnEventController@insterestupdate');
 Route::get('goingupdate/{id}', 'API\InterestedOnEventController@goingupdate');
-Route::get('search', 'API\SearchController@search');
+Route::get('search/{id}', 'API\SearchController@search');
