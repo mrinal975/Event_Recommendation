@@ -72040,6 +72040,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -72050,18 +72060,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
+    goingCheck: function goingCheck(eventid) {
+      var _this = this;
+
+      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref) {
+        var data = _ref.data;
+        return _this.event["goingstatus"] = data;
+      });
+      axios.get("http://127.0.0.1:8000/api/totalGoing/").then(function (_ref2) {
+        var data = _ref2.data;
+        return _this.event["totalGoing"] = data;
+      });
+    },
+    interestcheck: function interestcheck(eventid) {
+      var _this2 = this;
+
+      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref3) {
+        var data = _ref3.data;
+        return _this2.event["intereststatus"] = data;
+      });
+      axios.get("http://127.0.0.1:8000/api/totalInterested/").then(function (_ref4) {
+        var data = _ref4.data;
+        return _this2.event["totalInterested"] = data;
+      });
+    },
     showEventImage: function showEventImage(Image) {
       var photo = "/img/event/" + Image;
       return photo;
     }
   },
   created: function created() {
-    var _this = this;
+    var _this3 = this;
 
     this.$Progress.start();
-    axios.get("http://127.0.0.1:8000/api/event/" + this.id).then(function (_ref) {
-      var data = _ref.data;
-      return _this.event = data.data;
+    axios.get("http://127.0.0.1:8000/api/event/" + this.id).then(function (_ref5) {
+      var data = _ref5.data;
+      return _this3.event = data.data;
     });
     this.$Progress.finish();
     console.log(this.$route.params);
@@ -72099,9 +72133,15 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", { staticClass: "text-center" }, [
-                            _vm._v(_vm._s(_vm.event.creatorName) + " created :")
-                          ]),
+                          _c(
+                            "router-link",
+                            { attrs: { to: "event/" + _vm.event.createdBy } },
+                            [
+                              _c("p", { staticClass: "text-center" }, [
+                                _vm._v(_vm._s(_vm.event.creatorName))
+                              ])
+                            ]
+                          ),
                           _vm._v(" "),
                           _c("img", {
                             staticClass: "card-img-top",
@@ -72150,25 +72190,57 @@ var render = function() {
                               "a",
                               {
                                 staticClass: "btn btn-primary",
-                                staticStyle: { color: "white" }
+                                staticStyle: { color: "white" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.interestcheck(_vm.event.id)
+                                  }
+                                }
                               },
-                              [_vm._v("Interested")]
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(_vm.event.intereststatus) +
+                                    "\n                                        "
+                                )
+                              ]
                             ),
                             _vm._v(" "),
                             _c(
                               "a",
                               {
                                 staticClass: "btn btn-primary",
-                                staticStyle: { color: "white" }
+                                staticStyle: { color: "white" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.goingCheck(_vm.event.id)
+                                  }
+                                }
                               },
-                              [_vm._v("Going")]
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(_vm.event.goingstatus) +
+                                    "\n                                        "
+                                )
+                              ]
                             ),
                             _vm._v(" "),
-                            _c("p", [_vm._v("Going : 12")]),
+                            _c("p", [
+                              _vm._v(
+                                "Going : " + _vm._s(_vm.event.totalGoing) + " "
+                              )
+                            ]),
                             _vm._v(" "),
-                            _c("p", [_vm._v("Interested : 12")])
+                            _c("p", [
+                              _vm._v(
+                                "Interested : " +
+                                  _vm._s(_vm.event.totalInterested)
+                              )
+                            ])
                           ])
-                        ]
+                        ],
+                        1
                       )
                     ])
                   ])
@@ -72411,6 +72483,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -72456,13 +72532,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var data = _ref2.data;
         return _this2.events[index]["goingstatus"] = data;
       });
+      axios.get("http://127.0.0.1:8000/api/totalGoing/").then(function (_ref3) {
+        var data = _ref3.data;
+        return _this2.events[index]["totalGoing"] = data;
+      });
     },
     InterestedOrNot: function InterestedOrNot(index, eventid) {
       var _this3 = this;
 
-      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref3) {
-        var data = _ref3.data;
+      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref4) {
+        var data = _ref4.data;
         return _this3.events[index]["intereststatus"] = data;
+      });
+      axios.get("http://127.0.0.1:8000/api/totalInterested/").then(function (_ref5) {
+        var data = _ref5.data;
+        return _this3.events[index]["totalInterested"] = data;
       });
     },
     showEventImage: function showEventImage(eventImage) {
@@ -72532,8 +72616,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     loadEvents: function loadEvents() {
       var _this6 = this;
 
-      axios.get("api/event").then(function (_ref4) {
-        var data = _ref4.data;
+      axios.get("api/event").then(function (_ref6) {
+        var data = _ref6.data;
         return _this6.events = data.data;
       });
     },
@@ -72550,22 +72634,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         //send request for delete
-        _this7.form.delete("api/event/" + id).then(function () {
-          if (result.value) {
-            swal("Deleted!", "Your file has been deleted.", "success");
-          }
-          _this7.loadEvents();
-        }).catch(function () {
-          swal("Failed!", "There was something wrong.", "warning");
-        });
+        if (result.value) {
+          _this7.form.delete("api/event/" + id).then(function () {
+            if (result.value) {
+              swal("Deleted!", "Your file has been deleted.", "success");
+            }
+            _this7.loadEvents();
+          }).catch(function () {
+            swal("Failed!", "There was something wrong.", "warning");
+          });
+        }
       });
     },
     createEvent: function createEvent() {
       var _this8 = this;
 
       this.$Progress.start();
-      this.form.post("api/event").then(function (_ref5) {
-        var data = _ref5.data;
+      this.form.post("api/event").then(function (_ref7) {
+        var data = _ref7.data;
 
         _this8.loadEvents();
         toast({
@@ -72706,11 +72792,7 @@ var render = function() {
                             { attrs: { to: "event/" + event.id } },
                             [
                               _c("h2", { staticClass: "title" }, [
-                                _vm._v(
-                                  _vm._s(event.eventName) +
-                                    " Index - " +
-                                    _vm._s(index)
-                                )
+                                _vm._v(_vm._s(event.eventName))
                               ])
                             ]
                           ),
@@ -72722,7 +72804,7 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("ul", [
-                            _c("li", { staticStyle: { width: "40%" } }, [
+                            _c("li", { staticStyle: { width: "25%" } }, [
                               _c(
                                 "a",
                                 {
@@ -72743,7 +72825,7 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("li", { staticStyle: { width: "40%" } }, [
+                            _c("li", { staticStyle: { width: "27%" } }, [
                               _c(
                                 "a",
                                 {
@@ -72764,8 +72846,14 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("li", { staticStyle: { width: "20%" } }, [
-                              _vm._v("103 Going")
+                            _c("li", { staticStyle: { width: "21%" } }, [
+                              _vm._v(_vm._s(event.totalGoing) + " Going")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticStyle: { width: "27%" } }, [
+                              _vm._v(
+                                _vm._s(event.totalInterested) + " Interested"
+                              )
                             ])
                           ])
                         ],
@@ -73633,10 +73721,165 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log("Component mounted.");
+  data: function data() {
+    return {
+      temp: {},
+      editmode: false,
+      schedules: {},
+      pagination: {},
+      form: new Form({
+        id: "",
+        schedulerName: "",
+        schedulerStartDate: "",
+        schedulerStartTime: "",
+        schedulerEndDate: "",
+        schedulerEndTime: "",
+        schedulerDescription: "",
+        createdBy: ""
+      })
+    };
+  },
+
+  methods: {
+    cancelEdit: function cancelEdit() {
+      this.editmode = false;
+    },
+    updateSchedule: function updateSchedule() {
+      var _this = this;
+
+      console.log("clicked on update");
+      this.form.put("api/schedule/" + this.form.id).then(function () {
+        //success
+        _this.$Progress.start();
+        _this.loadScheduler();
+        $("#scheduleModal").modal("hide");
+        swal("Updated!", "Information has been updated.", "success");
+        _this.$Progress.finish();
+      }).catch(function () {
+        //error
+        swal("Fail!", "updated failed", "warning");
+        _this.$Progress.fail();
+      });
+    },
+    createSchedule: function createSchedule() {
+      var _this2 = this;
+
+      this.$Progress.start();
+      this.form.post("api/schedule").then(function (_ref) {
+        var data = _ref.data;
+
+        _this2.loadScheduler();
+        toast({
+          type: "success",
+          title: "Schedule created successfully"
+        });
+        _this2.$Progress.finish();
+        $("#scheduleModal").modal("hide");
+      });
+    },
+    openModel: function openModel() {
+      $("#scheduleModal").modal("show");
+      this.form.reset();
+    },
+    editSchedulet: function editSchedulet(schedule) {
+      this.editmode = true;
+      $("#scheduleModal").modal("show");
+      this.form.fill(schedule);
+    },
+    deleteSchedulet: function deleteSchedulet(scheduleID) {
+      var _this3 = this;
+
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        console.log(result.value);
+        if (result.value) {
+          //send request for delete
+          _this3.form.delete("api/schedule/" + scheduleID).then(function () {
+            if (result.value) {
+              swal("Deleted!", "Your file has been deleted.", "success");
+            }
+            _this3.loadScheduler();
+          }).catch(function () {
+            swal("Failed!", "There was something wrong.", "warning");
+          });
+        }
+      });
+    },
+    loadScheduler: function loadScheduler(page_url) {
+      var _this4 = this;
+
+      var vm = this;
+      var peram = page_url;
+      console.log("peram : " + peram);
+      page_url = page_url || "api/schedule";
+      axios.get(page_url).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this4.schedules = data.data, vm.makePagination(data.meta, data.links);
+      });
+    },
+    makePagination: function makePagination(meta, links) {
+      var pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev
+      };
+      this.pagination = pagination;
+    }
+  },
+  created: function created() {
+    this.loadScheduler();
   }
 });
 
@@ -73648,255 +73891,691 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-11" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Schedule Component")
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-11" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("Schedule Component")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button", "data-toggle": "modal" },
+                on: {
+                  click: function($event) {
+                    _vm.openModel()
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                        Add Task\n                      "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _c("br"),
+            _vm._v(" "),
+            _c("div", { staticClass: "row justify-content-center" }, [
+              _c("div", { staticClass: "col-md-9" }, [
+                _c(
+                  "div",
+                  { staticClass: "row justify-content-center" },
+                  _vm._l(_vm.schedules, function(schedule, index) {
+                    return _c(
+                      "div",
+                      {
+                        key: index,
+                        staticClass: "card",
+                        staticStyle: { width: "75%" },
+                        attrs: { value: schedule.value }
+                      },
+                      [
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-md-11" }, [
+                            _c("h2", { staticClass: "text-center top-style" }, [
+                              _vm._v(_vm._s(schedule.schedulerName))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-center" }, [
+                              _c("span", { staticClass: "time" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventTime")(
+                                      schedule.schedulerStartTime
+                                    )
+                                  )
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-center" }, [
+                              _c("span", { staticClass: "day" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventDate")(
+                                      schedule.schedulerStartDate
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "month" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventMonth")(
+                                      schedule.schedulerStartDate
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "year" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventYear")(
+                                      schedule.schedulerStartDate
+                                    )
+                                  )
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-center" }, [
+                              _vm._v("Short Description of the Task")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-md-1" }, [
+                            _c("div", { staticClass: "float-right" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticStyle: { cursor: "pointer" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.editSchedulet(schedule)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "fas fa-edit",
+                                    attrs: { title: "Edit Schedule" }
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticStyle: { cursor: "pointer" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteSchedulet(schedule.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "fas fa-trash",
+                                    attrs: { title: "Delete Schedule" }
+                                  })
+                                ]
+                              )
+                            ])
+                          ])
+                        ])
+                      ]
+                    )
+                  })
+                )
+              ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "modal",
-                    "data-target": "#exampleModal"
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n                        Add Task\n                        "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "row justify-content-center" }, [
-                _c("div", { staticClass: "col-md-9" }, [
-                  _c("div", { staticClass: "row justify-content-center" }, [
+            _c("div", { staticClass: "row justify-content-center" }, [
+              _c("div", { staticClass: "col-md-7" }, [
+                _c(
+                  "p",
+                  {
+                    staticClass: "page-item float-center text-center",
+                    class: [{ disabled: !_vm.pagination.next_page_url }]
+                  },
+                  [
                     _c(
-                      "div",
-                      { staticClass: "card", staticStyle: { width: "75%" } },
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        on: {
+                          click: function($event) {
+                            _vm.loadScheduler(_vm.pagination.next_page_url)
+                          }
+                        }
+                      },
+                      [_vm._v("Show more")]
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "modal fade",
+              attrs: {
+                id: "scheduleModal",
+                tabindex: "-1",
+                role: "dialog",
+                "aria-labelledby": "scheduleModalLabel",
+                "aria-hidden": "true"
+              }
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "modal-dialog", attrs: { role: "document" } },
+                [
+                  _c("div", { staticClass: "modal-content" }, [
+                    _c("div", { staticClass: "modal-header" }, [
+                      _c(
+                        "h5",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.editmode,
+                              expression: "!editmode"
+                            }
+                          ],
+                          staticClass: "modal-title",
+                          attrs: { id: "exampleModalLabel" }
+                        },
+                        [_vm._v("Add Schedule")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "h5",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.editmode,
+                              expression: "editmode"
+                            }
+                          ],
+                          staticClass: "modal-title",
+                          attrs: { id: "exampleModalLabel" }
+                        },
+                        [_vm._v("Edit Schedule")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "close",
+                          attrs: {
+                            type: "button",
+                            "data-dismiss": "modal",
+                            "aria-label": "Close"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.cancelEdit()
+                            }
+                          }
+                        },
+                        [
+                          _c("span", { attrs: { "aria-hidden": "true" } }, [
+                            _vm._v("×")
+                          ])
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            _vm.editmode
+                              ? _vm.updateSchedule()
+                              : _vm.createSchedule()
+                          }
+                        }
+                      },
                       [
-                        _c("h2", { staticClass: "text-center top-style" }, [
-                          _vm._v("Task  Name")
+                        _c("div", { staticClass: "modal-body" }, [
+                          _c("div", { staticClass: "form-row" }, [
+                            _c(
+                              "div",
+                              { staticClass: "col-md-12" },
+                              [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "schedulerName" } },
+                                  [_vm._v("What")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.schedulerName,
+                                      expression: "form.schedulerName"
+                                    }
+                                  ],
+                                  staticClass: "form-control is-valid",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "schedulerName"
+                                    )
+                                  },
+                                  attrs: {
+                                    type: "text",
+                                    id: "schedulerName",
+                                    placeholder: "Schedule name",
+                                    required: ""
+                                  },
+                                  domProps: { value: _vm.form.schedulerName },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "schedulerName",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("has-error", {
+                                  staticClass: "fontinput",
+                                  attrs: {
+                                    form: _vm.form,
+                                    field: "schedulerName"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-row" }, [
+                            _c(
+                              "div",
+                              { staticClass: "col-md-5 mb-2" },
+                              [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "schedulerStartDate" } },
+                                  [_vm._v("Start Date")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.schedulerStartDate,
+                                      expression: "form.schedulerStartDate"
+                                    }
+                                  ],
+                                  staticClass: "form-control is-valid",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "schedulerStartDate"
+                                    )
+                                  },
+                                  attrs: {
+                                    type: "date",
+                                    id: "schedulerStartDate",
+                                    required: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.form.schedulerStartDate
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "schedulerStartDate",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("has-error", {
+                                  staticClass: "fontinput",
+                                  attrs: {
+                                    form: _vm.form,
+                                    field: "schedulerStartDate"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-md-5 mb-2" },
+                              [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "schedulerStartTime" } },
+                                  [_vm._v("Start Time")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.schedulerStartTime,
+                                      expression: "form.schedulerStartTime"
+                                    }
+                                  ],
+                                  staticClass: "form-control is-valid",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "schedulerStartTime"
+                                    )
+                                  },
+                                  attrs: {
+                                    type: "time",
+                                    id: "schedulerStartTime",
+                                    required: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.form.schedulerStartTime
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "schedulerStartTime",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("has-error", {
+                                  staticClass: "fontinput",
+                                  attrs: {
+                                    form: _vm.form,
+                                    field: "schedulerStartTime"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-row" }, [
+                            _c(
+                              "div",
+                              { staticClass: "col-md-5 mb-2" },
+                              [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "schedulerEndDate" } },
+                                  [_vm._v("End Date")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.schedulerEndDate,
+                                      expression: "form.schedulerEndDate"
+                                    }
+                                  ],
+                                  staticClass: "form-control is-valid",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "schedulerEndDate"
+                                    )
+                                  },
+                                  attrs: {
+                                    type: "date",
+                                    id: "schedulerEndDate",
+                                    required: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.form.schedulerEndDate
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "schedulerEndDate",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("has-error", {
+                                  staticClass: "fontinput",
+                                  attrs: {
+                                    form: _vm.form,
+                                    field: "schedulerEndDate"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-md-5 mb-2" },
+                              [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "schedulerEndTime" } },
+                                  [_vm._v("End Time")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.schedulerEndTime,
+                                      expression: "form.schedulerEndTime"
+                                    }
+                                  ],
+                                  staticClass: "form-control is-valid",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "schedulerEndTime"
+                                    )
+                                  },
+                                  attrs: {
+                                    type: "time",
+                                    id: "schedulerEndTime",
+                                    required: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.form.schedulerEndTime
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "schedulerEndTime",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("has-error", {
+                                  staticClass: "fontinput",
+                                  attrs: {
+                                    form: _vm.form,
+                                    field: "schedulerEndTime"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-row" }, [
+                            _c(
+                              "div",
+                              { staticClass: "col-md-12" },
+                              [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "schedulerDescription" } },
+                                  [_vm._v("Description")]
+                                ),
+                                _vm._v(" "),
+                                _c("textarea", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.schedulerDescription,
+                                      expression: "form.schedulerDescription"
+                                    }
+                                  ],
+                                  staticClass: "form-control is-valid",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "schedulerDescription"
+                                    )
+                                  },
+                                  attrs: {
+                                    id: "schedulerDescription",
+                                    placeholder: "Scheduler name",
+                                    required: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.form.schedulerDescription
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "schedulerDescription",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("has-error", {
+                                  staticClass: "fontinput",
+                                  attrs: {
+                                    form: _vm.form,
+                                    field: "schedulerDescription"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
-                        _c("p", { staticClass: "text-center" }, [
-                          _vm._v("Time")
-                        ]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "text-center" }, [
-                          _vm._v("Short Description of the Task")
+                        _c("div", { staticClass: "modal-footer" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary",
+                              attrs: {
+                                type: "button",
+                                "data-dismiss": "modal"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.cancelEdit()
+                                }
+                              }
+                            },
+                            [_vm._v("Close")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: !_vm.editmode,
+                                  expression: "!editmode"
+                                }
+                              ],
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "submit" }
+                            },
+                            [_vm._v("Create Schedule")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.editmode,
+                                  expression: "editmode"
+                                }
+                              ],
+                              staticClass: "btn btn-success",
+                              attrs: { type: "submit" }
+                            },
+                            [_vm._v("Update")]
+                          )
                         ])
                       ]
                     )
                   ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "modal fade",
-                attrs: {
-                  id: "exampleModal",
-                  tabindex: "-1",
-                  role: "dialog",
-                  "aria-labelledby": "exampleModalLabel",
-                  "aria-hidden": "true"
-                }
-              },
-              [
-                _c(
-                  "div",
-                  { staticClass: "modal-dialog", attrs: { role: "document" } },
-                  [
-                    _c("div", { staticClass: "modal-content" }, [
-                      _c("div", { staticClass: "modal-header" }, [
-                        _c(
-                          "h5",
-                          {
-                            staticClass: "modal-title",
-                            attrs: { id: "exampleModalLabel" }
-                          },
-                          [_vm._v("Add Task")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "close",
-                            attrs: {
-                              type: "button",
-                              "data-dismiss": "modal",
-                              "aria-label": "Close"
-                            }
-                          },
-                          [
-                            _c("span", { attrs: { "aria-hidden": "true" } }, [
-                              _vm._v("×")
-                            ])
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "modal-body" }, [
-                        _c("form", [
-                          _c("div", { staticClass: "form-row" }, [
-                            _c("div", { staticClass: "col-md-12" }, [
-                              _c(
-                                "label",
-                                { attrs: { for: "validationServer01" } },
-                                [_vm._v("What")]
-                              ),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control is-valid",
-                                attrs: {
-                                  type: "text",
-                                  id: "validationServer01",
-                                  placeholder: "Task name",
-                                  required: ""
-                                }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-row" }, [
-                            _c("div", { staticClass: "col-md-5 mb-2" }, [
-                              _c("label", { attrs: { for: "Date" } }, [
-                                _vm._v("Date")
-                              ]),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control is-valid",
-                                attrs: {
-                                  type: "date",
-                                  id: "Date",
-                                  required: ""
-                                }
-                              })
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col-md-5 mb-2" }, [
-                              _c("label", { attrs: { for: "Time" } }, [
-                                _vm._v("Time")
-                              ]),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control is-valid",
-                                attrs: {
-                                  type: "time",
-                                  id: "Time",
-                                  required: ""
-                                }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-row" }, [
-                            _c("div", { staticClass: "col-md-12" }, [
-                              _c(
-                                "label",
-                                { attrs: { for: "validationServer01" } },
-                                [_vm._v("Where")]
-                              ),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control is-valid",
-                                attrs: {
-                                  type: "text",
-                                  id: "validationServer01",
-                                  placeholder: "Where name",
-                                  required: ""
-                                }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-row" }, [
-                            _c("div", { staticClass: "col-md-12" }, [
-                              _c(
-                                "label",
-                                { attrs: { for: "validationServer01" } },
-                                [_vm._v("Repeat")]
-                              ),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control is-valid",
-                                attrs: {
-                                  type: "text",
-                                  id: "validationServer01",
-                                  placeholder: "Where name",
-                                  required: ""
-                                }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-row" }, [
-                            _c("div", { staticClass: "col-md-12" }, [
-                              _c(
-                                "label",
-                                { attrs: { for: "validationServer01" } },
-                                [_vm._v("Description")]
-                              ),
-                              _vm._v(" "),
-                              _c("textarea", {
-                                staticClass: "form-control is-valid",
-                                attrs: {
-                                  id: "validationServer01",
-                                  placeholder: "Description name",
-                                  required: ""
-                                }
-                              })
-                            ])
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "modal-footer" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-secondary",
-                            attrs: { type: "button", "data-dismiss": "modal" }
-                          },
-                          [_vm._v("Close")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-primary",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("Save changes")]
-                        )
-                      ])
-                    ])
-                  ]
-                )
-              ]
-            )
-          ])
+                ]
+              )
+            ]
+          )
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -74004,10 +74683,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log("Component mounted.");
+  data: function data() {
+    return {
+      schedules: {},
+      events: {}
+    };
+  },
+
+  methods: {
+    showEventImage: function showEventImage(eventImage) {
+      var photo = "img/event/" + eventImage;
+      return photo;
+    },
+    loadDailySchedule: function loadDailySchedule() {
+      var _this = this;
+
+      axios.get("api/dailySchedule").then(function (_ref) {
+        var data = _ref.data;
+        return _this.schedules = data.data;
+      });
+    },
+    loadDailyEvent: function loadDailyEvent() {
+      var _this2 = this;
+
+      axios.get("api/dailyEvent").then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.events = data.data;
+      });
+    }
+  },
+  created: function created() {
+    this.loadDailySchedule();
+    this.loadDailyEvent();
   }
 });
 
@@ -74019,101 +74752,232 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-11" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Hellow,YourName. Today you have below's task.")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "row justify-content-center" }, [
-                _c("div", { staticClass: "col-md-9" }, [
-                  _c("div", { staticClass: "row justify-content-center" }, [
-                    _c(
-                      "div",
-                      { staticClass: "card", staticStyle: { width: "75%" } },
-                      [
-                        _c("h2", { staticClass: "text-center top-style" }, [
-                          _vm._v("Event  Name")
-                        ]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "text-center" }, [
-                          _vm._v("Event Place:")
-                        ]),
-                        _vm._v(" "),
-                        _c("img", {
-                          staticClass: "card-img-top",
-                          staticStyle: { width: "100%" },
-                          attrs: {
-                            height: "260px;",
-                            src: "img/12.jpg",
-                            alt: "Card image"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "card-body" }, [
-                          _c("h4", { staticClass: "card-title" }, [
-                            _vm._v("Created By")
-                          ]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "card-text" }, [
-                            _vm._v("Short Description of the project")
-                          ]),
-                          _vm._v(" "),
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-11" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              { staticClass: "row justify-content-center" },
+              _vm._l(_vm.events, function(event, index) {
+                return _c(
+                  "div",
+                  {
+                    key: index,
+                    staticClass: "col-md-9",
+                    attrs: { value: event.value }
+                  },
+                  [
+                    _c("div", { staticClass: "row justify-content-center" }, [
+                      _c(
+                        "div",
+                        { staticClass: "card", staticStyle: { width: "75%" } },
+                        [
                           _c(
-                            "a",
-                            {
-                              staticClass: "btn btn-primary",
-                              attrs: { href: "#" }
-                            },
-                            [_vm._v("Event Page")]
-                          )
-                        ])
-                      ]
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row justify-content-center" }, [
-                _c("div", { staticClass: "col-md-9" }, [
-                  _c("div", { staticClass: "row justify-content-center" }, [
-                    _c(
-                      "div",
-                      { staticClass: "card", staticStyle: { width: "75%" } },
-                      [
-                        _c("h2", { staticClass: "text-center top-style" }, [
-                          _vm._v("Task  Name")
-                        ]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "text-center" }, [
-                          _vm._v("Time")
-                        ]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "text-center" }, [
-                          _vm._v("Short Description of the Task")
-                        ])
-                      ]
-                    )
-                  ])
-                ])
-              ])
+                            "router-link",
+                            { attrs: { to: "event/" + event.id } },
+                            [
+                              _c(
+                                "h3",
+                                { staticClass: "text-center top-style" },
+                                [_vm._v(_vm._s(event.eventName))]
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-center" }, [
+                            _vm._v(_vm._s(event.eventPlace))
+                          ]),
+                          _vm._v(" "),
+                          _c("img", {
+                            staticClass: "card-img-top",
+                            staticStyle: { width: "100%" },
+                            attrs: {
+                              height: "220px;",
+                              src: _vm.showEventImage(event.eventImage),
+                              alt: "Card image"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "card-body" }, [
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "col-sm-8" },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      attrs: {
+                                        to: "profile/" + event.createdBy
+                                      }
+                                    },
+                                    [
+                                      _c("h4", { staticClass: "card-title" }, [
+                                        _vm._v(_vm._s(event.createdByName))
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("p", [
+                                    _c("span", { staticClass: "time" }, [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("EventTime")(
+                                            event.eventStartTime
+                                          )
+                                        )
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("span", { staticClass: "day" }, [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("EventDate")(
+                                            event.eventStartDate
+                                          )
+                                        )
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("span", { staticClass: "month" }, [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("EventMonth")(
+                                            event.eventStartDate
+                                          )
+                                        )
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("span", { staticClass: "year" }, [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("EventYear")(
+                                            event.eventStartDate
+                                          )
+                                        )
+                                      )
+                                    ])
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("p", { staticClass: "card-text" }, [
+                                    _vm._v("Short Description of the project")
+                                  ])
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-sm-4" }, [
+                                _c("div", { staticClass: "float-right" }, [
+                                  _c("p", [
+                                    _vm._v(
+                                      " Going : " + _vm._s(event.totalGoing)
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("p", [
+                                    _vm._v(
+                                      "Interested : " +
+                                        _vm._s(event.totalInterested)
+                                    )
+                                  ])
+                                ])
+                              ])
+                            ])
+                          ])
+                        ],
+                        1
+                      )
+                    ])
+                  ]
+                )
+              })
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "row justify-content-center" }, [
+              _c(
+                "div",
+                { staticClass: "col-md-9" },
+                _vm._l(_vm.schedules, function(schedule, index) {
+                  return _c(
+                    "div",
+                    {
+                      key: index,
+                      staticClass: "row justify-content-center",
+                      attrs: { value: schedule.value }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "card", staticStyle: { width: "75%" } },
+                        [
+                          _c("h2", { staticClass: "text-center top-style" }, [
+                            _vm._v(_vm._s(schedule.schedulerName))
+                          ]),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-center" }, [
+                            _c("span", { staticClass: "time" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("EventTime")(
+                                    schedule.schedulerStartTime
+                                  )
+                                )
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-center" }, [
+                            _c("span", { staticClass: "day" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("EventDate")(
+                                    schedule.schedulerStartDate
+                                  )
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "month" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("EventMonth")(
+                                    schedule.schedulerStartDate
+                                  )
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "year" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("EventYear")(
+                                    schedule.schedulerStartDate
+                                  )
+                                )
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-center" }, [
+                            _vm._v("Short Description of the Task")
+                          ])
+                        ]
+                      )
+                    ]
+                  )
+                })
+              )
             ])
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -74426,26 +75290,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       axios.get("http://127.0.0.1:8000/api/followStaus/" + this.id).then(function (_ref2) {
         var data = _ref2.data;
-        return _this2.followOrNot = data, console.log(data);
+        return _this2.followOrNot = data;
       });
     },
     showProfileImage: function showProfileImage(profileImage) {
-      if (profileImage == "profile" || profileImage == null) {
-        var Image = "/img/" + profileImage;
-        return Image;
+      if (profileImage == "profile.png") {
+        return "img/" + this.profile.image;
       } else {
-        var _Image = this.profile.image.length > 70 ? this.profile.image : "img/profile/" + this.profile.image;
-        return _Image;
+        var Image = this.profile.image.length > 70 ? this.profile.image : "img/profile/" + this.profile.image;
+        return Image;
       }
     },
     modelProfileImage: function modelProfileImage() {
-      var Image = this.profile.image.length > 70 ? this.profile.image : "img/profile/" + this.profile.image;
-      return Image;
+      if (profileImage == "profile.png") {
+        return "img/" + this.profile.image;
+      } else {
+        var Image = this.profile.image.length > 70 ? this.profile.image : "img/profile/" + this.profile.image;
+        return Image;
+      }
     },
     ProfilePicture: function ProfilePicture(e) {
       var _this3 = this;
 
-      console.log("uploaded");
       var file = e.target.files[0];
       var reader = new FileReader();
       var limit = 1024 * 1024 * 2;
@@ -74468,7 +75334,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       reader.onloadend = function (file) {
         _this3.profile.image = reader.result;
-        console.log(_this3.profile.image);
       };
       reader.readAsDataURL(file);
     },

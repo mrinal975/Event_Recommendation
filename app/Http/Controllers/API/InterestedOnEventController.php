@@ -66,6 +66,15 @@ class InterestedOnEventController extends Controller
        }
     }
 
+    public function totalgoing(){
+        //for going status is 1
+        return count(InterestedOnEvent::where('Interest_type',1)->get());
+    }
+    public function totalinterested(){
+        //for Interest status is 2
+        return count(InterestedOnEvent::where('Interest_type',2)->get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -31,22 +31,22 @@ class EventController extends Controller
 
     public function index()
     {
-        $adata=array('');
-        $collection =collect(['']);
-        $userId=Auth::user('api')->id;
-        $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(3);
-        foreach ($userInterest as  $interest) {
-             $event=Event::where('eventType','LIKE','%'.strtolower($interest->Interest_on).'%')->get();
-             foreach ($userInterest as $key => $value) {
-                $collection->put($key,$value);
-             }
+        // $adata=array('');
+        // $collection =collect(['']);
+        // $userId=Auth::user('api')->id;
+        // $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(3);
+        // foreach ($userInterest as  $interest) {
+        //      $event=Event::where('eventType','LIKE','%'.strtolower($interest->Interest_on).'%')->get();
+        //      foreach ($userInterest as $key => $value) {
+        //         $collection->put($key,$value);
+        //      }
              
-        }
-        dd($collection->all());
-        // return $adata;
-        // return count($event);
-        // $data=Event::latest()->paginate(5);
-        // return  EventCollection::collection($a,true, 200);
+        // }
+        // dd($collection->all());
+        // // return $adata;
+        // // return count($event);
+        $data=Event::latest()->paginate(5);
+        return  EventCollection::collection($data);
     }
 
     /**

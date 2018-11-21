@@ -23,6 +23,7 @@
                         <br>
                         <br>
                         <div class="row justify-content-center">
+
 				    <ul class="event-list">
 					<li v-for="(event,index) in events" :key="index" :value="event.value">
 						<time>
@@ -34,23 +35,24 @@
 						<img alt="Event Image" :src="showEventImage(event.eventImage)" />
 						<div class="info">
               <router-link  v-bind:to="'event/'+event.id">
-							<h2 class="title">{{event.eventName}} Index - {{index}}</h2>
+							<h2 class="title">{{event.eventName}}</h2>
               </router-link>
                            
 							<p class="desc">Bar Hopping in Erie, Pa.Bar Hopping in Erie, Pa</p>
                
 							<ul>
-								<li style="width:40%;">
+								<li style="width:25%;">
                   <a class="glyphicon glyphicon-ok" @click="goingOrNot(index,event.id)">
                  {{event.goingstatus}}
                   </a></li>
-								<li style="width:40%;">
+								<li style="width:27%;">
 
                   <a class="glyphicon glyphicon-ok" @click="InterestedOrNot(index,event.id)">
                   {{event.intereststatus}}
                   </a>
                  </li>
-								<li style="width:20%;">103 Going</li>
+								<li style="width:21%;">{{event.totalGoing}} Going</li>
+                <li style="width:27%;">{{event.totalInterested}} Interested</li>
 							</ul>
 						</div>
 						<div class="social">
@@ -61,6 +63,8 @@
 						</div>
 					</li>
 				</ul>
+
+
 			</div>
                     </div>
                 </div>
@@ -202,11 +206,17 @@ export default {
       axios
         .get("http://127.0.0.1:8000/api/goingupdate/" + eventid)
         .then(({ data }) => (this.events[index]["goingstatus"] = data));
+      axios
+        .get("http://127.0.0.1:8000/api/totalGoing/")
+        .then(({ data }) => (this.events[index]["totalGoing"] = data));
     },
     InterestedOrNot(index, eventid) {
       axios
         .get("http://127.0.0.1:8000/api/insterestupdate/" + eventid)
         .then(({ data }) => (this.events[index]["intereststatus"] = data));
+      axios
+        .get("http://127.0.0.1:8000/api/totalInterested/")
+        .then(({ data }) => (this.events[index]["totalInterested"] = data));
     },
     showEventImage(eventImage) {
       let photo = "img/event/" + eventImage;
@@ -288,17 +298,19 @@ export default {
         confirmButtonText: "Yes, delete it!"
       }).then(result => {
         //send request for delete
-        this.form
-          .delete("api/event/" + id)
-          .then(() => {
-            if (result.value) {
-              swal("Deleted!", "Your file has been deleted.", "success");
-            }
-            this.loadEvents();
-          })
-          .catch(() => {
-            swal("Failed!", "There was something wrong.", "warning");
-          });
+        if (result.value) {
+          this.form
+            .delete("api/event/" + id)
+            .then(() => {
+              if (result.value) {
+                swal("Deleted!", "Your file has been deleted.", "success");
+              }
+              this.loadEvents();
+            })
+            .catch(() => {
+              swal("Failed!", "There was something wrong.", "warning");
+            });
+        }
       });
     },
 

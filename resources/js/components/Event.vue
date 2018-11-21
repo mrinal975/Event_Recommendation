@@ -14,17 +14,27 @@
                                         <h3 class="text-center top-style">
                                         {{event.eventName}}
                                         </h3>
-                                        <p class="text-center">{{event.creatorName}} created :</p>
+                                        <router-link  v-bind:to="'event/'+event.createdBy">
+                                        <p class="text-center">{{event.creatorName}}</p>
+                                        </router-link>
                                         <img class="card-img-top" height="260px;"  :src="showEventImage(event.eventImage)" alt="Card image" style="width:100%">
                                         <div class="card-body">
                                         <h4 class="card-title">{{event.eventPlace}}</h4>
                                         
                                         <p class="card-text">{{event.eventStartDate | EventDate}} {{event.eventStartDate | EventMonth}} {{event.eventStartDate | EventYear}}</p>
                                         <p>{{event.eventStartTime | EventTime}}</p>
-                                        <a class="btn btn-primary" style="color:white;">Interested</a>
-                                        <a class="btn btn-primary" style="color:white;">Going</a>
-                                        <p>Going : 12</p>
-                                        <p>Interested : 12</p>
+
+                                        <a class="btn btn-primary" style="color:white;"
+                                        @click="interestcheck(event.id)">
+                                            {{event.intereststatus}}
+                                            </a>
+
+                                        <a class="btn btn-primary" style="color:white;" 
+                                        @click="goingCheck(event.id)">
+                                            {{event.goingstatus}}
+                                            </a>
+                                        <p>Going : {{event.totalGoing}} </p>
+                                        <p>Interested : {{event.totalInterested}}</p>
                                         </div>
                                     </div>
                                </div>
@@ -49,6 +59,22 @@ export default {
     };
   },
   methods: {
+    goingCheck(eventid) {
+      axios
+        .get("http://127.0.0.1:8000/api/goingupdate/" + eventid)
+        .then(({ data }) => (this.event["goingstatus"] = data));
+      axios
+        .get("http://127.0.0.1:8000/api/totalGoing/")
+        .then(({ data }) => (this.event["totalGoing"] = data));
+    },
+    interestcheck(eventid) {
+      axios
+        .get("http://127.0.0.1:8000/api/insterestupdate/" + eventid)
+        .then(({ data }) => (this.event["intereststatus"] = data));
+      axios
+        .get("http://127.0.0.1:8000/api/totalInterested/")
+        .then(({ data }) => (this.event["totalInterested"] = data));
+    },
     showEventImage(Image) {
       let photo = "/img/event/" + Image;
       return photo;

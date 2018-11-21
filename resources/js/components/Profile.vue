@@ -242,12 +242,11 @@ export default {
     followStaus() {
       axios
         .get("http://127.0.0.1:8000/api/followStaus/" + this.id)
-        .then(({ data }) => ((this.followOrNot = data), console.log(data)));
+        .then(({ data }) => (this.followOrNot = data));
     },
     showProfileImage(profileImage) {
-      if (profileImage == "profile" || profileImage == null) {
-        let Image = "/img/" + profileImage;
-        return Image;
+      if (profileImage == "profile.png") {
+        return "img/" + this.profile.image;
       } else {
         let Image =
           this.profile.image.length > 70
@@ -257,14 +256,17 @@ export default {
       }
     },
     modelProfileImage() {
-      let Image =
-        this.profile.image.length > 70
-          ? this.profile.image
-          : "img/profile/" + this.profile.image;
-      return Image;
+      if (profileImage == "profile.png") {
+        return "img/" + this.profile.image;
+      } else {
+        let Image =
+          this.profile.image.length > 70
+            ? this.profile.image
+            : "img/profile/" + this.profile.image;
+        return Image;
+      }
     },
     ProfilePicture(e) {
-      console.log("uploaded");
       let file = e.target.files[0];
       let reader = new FileReader();
       let limit = 1024 * 1024 * 2;
@@ -287,7 +289,6 @@ export default {
 
       reader.onloadend = file => {
         this.profile.image = reader.result;
-        console.log(this.profile.image);
       };
       reader.readAsDataURL(file);
     },
