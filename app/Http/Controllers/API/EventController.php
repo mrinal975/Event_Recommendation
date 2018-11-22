@@ -9,6 +9,7 @@ use App\Http\Resources\Event\EventResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Event\EventRequest;
 use App\Event;
+use date;
 use Image;
 use Gate;
 use Auth;
@@ -31,22 +32,43 @@ class EventController extends Controller
 
     public function index()
     {
-        // $adata=array('');
-        // $collection =collect(['']);
-        // $userId=Auth::user('api')->id;
-        // $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(3);
-        // foreach ($userInterest as  $interest) {
-        //      $event=Event::where('eventType','LIKE','%'.strtolower($interest->Interest_on).'%')->get();
-        //      foreach ($userInterest as $key => $value) {
-        //         $collection->put($key,$value);
-        //      }
-             
-        // }
-        // dd($collection->all());
-        // // return $adata;
-        // // return count($event);
-        $data=Event::latest()->paginate(5);
-        return  EventCollection::collection($data);
+
+        $interst=[];
+        $dateToday=date('Y-m-d');
+        $count=0;
+        $userId=Auth::user('api')->id;
+        //fetching if your have gone on some event
+        $datas=User::find($userId)->events()->wherePivotIn('Interest_type',[1,2])->latest()->paginate(3);
+        if(!empty($datas) && $datas!=null){
+            foreach ($datas as $data) {
+                $interst[]=$data->eventType;
+                $count++;
+                }           
+            }
+            //fetching three interested thing
+        if($count==0){ 
+            $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(3);
+            if($userInterest){
+                foreach ($userInterest as $data) {
+                    $interst[]=$data->Interest_on;
+                    $count++;
+                }
+            }    
+        }
+        //checking data range
+        if($count==2){
+             $eventData=Event::whereIn('eventType',[$interst[0],$interst[1]])
+                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(3);
+        }
+        elseif($count==1){
+             $eventData=Event::whereIn('eventType',[$interst[0]])
+                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(3);
+        }
+        elseif($count==3){
+             $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2]])
+                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(3);
+        }
+        return EventCollection::collection($eventData);
     }
 
     /**

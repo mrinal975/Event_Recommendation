@@ -72135,7 +72135,9 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "router-link",
-                            { attrs: { to: "event/" + _vm.event.createdBy } },
+                            {
+                              attrs: { to: "/profile/" + _vm.event.createdBy }
+                            },
                             [
                               _c("p", { staticClass: "text-center" }, [
                                 _vm._v(_vm._s(_vm.event.creatorName))
@@ -75302,7 +75304,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     modelProfileImage: function modelProfileImage() {
-      if (profileImage == "profile.png") {
+      if (this.profile.image == "profile.png") {
         return "img/" + this.profile.image;
       } else {
         var Image = this.profile.image.length > 70 ? this.profile.image : "img/profile/" + this.profile.image;
@@ -75741,7 +75743,7 @@ var render = function() {
                                           attrs: {
                                             alt: "Profile Picture",
                                             src: _vm.modelProfileImage(),
-                                            height: "130px",
+                                            height: "150px",
                                             width: "260px"
                                           }
                                         })

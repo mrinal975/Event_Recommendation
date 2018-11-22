@@ -119,7 +119,7 @@
                 </div>
                 <div class="col-md-7">
                     <!-- <img alt="Image test" height="130px" width="260px" src="/img/12.jpg"> -->
-                     <img  alt="Profile Picture" :src="modelProfileImage()" height="130px" width="260px">
+                     <img  alt="Profile Picture" :src="modelProfileImage()" height="150px" width="260px">
                 </div>
             </div>
             <div class="form-group">
@@ -256,7 +256,7 @@ export default {
       }
     },
     modelProfileImage() {
-      if (profileImage == "profile.png") {
+      if (this.profile.image == "profile.png") {
         return "img/" + this.profile.image;
       } else {
         let Image =

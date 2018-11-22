@@ -14,7 +14,7 @@
                                         <h3 class="text-center top-style">
                                         {{event.eventName}}
                                         </h3>
-                                        <router-link  v-bind:to="'event/'+event.createdBy">
+                                        <router-link  v-bind:to="'/profile/'+event.createdBy">
                                         <p class="text-center">{{event.creatorName}}</p>
                                         </router-link>
                                         <img class="card-img-top" height="260px;"  :src="showEventImage(event.eventImage)" alt="Card image" style="width:100%">
