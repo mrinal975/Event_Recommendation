@@ -28,3 +28,7 @@ Route::apiResource('schedule','API\SchedulerController');
 //DailySchedule Route
 Route::get('dailyEvent/', 'API\DailyScheduleController@DailyEvent');
 Route::get('dailySchedule/', 'API\DailyScheduleController@DailySchedulet');
+
+//followers AND following Route
+Route::get('following/{id}', 'API\ProfileController@following');
+Route::get('followers/{id}', 'API\ProfileController@followers');

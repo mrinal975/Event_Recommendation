@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Profile;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Friend;
 
 class ProfileResource extends JsonResource
 {
@@ -20,6 +21,8 @@ class ProfileResource extends JsonResource
             'email'=>$this->email,
             'phone'=>$this->phone,
             'image'=>$this->image,
+            'following'=>count(Friend::where('hwo','=',$this->id)->get()),
+            'followers'=>count(Friend::where('whom','=',$this->id)->get()),
         ];
     }
 }

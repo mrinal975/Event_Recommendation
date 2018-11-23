@@ -10,6 +10,13 @@
 .addclass > tbody > tr > .edit {
     display: true;
 }
+.scrollable-model-body {
+    height: 250px;
+    overflow-y: auto;
+}
+.followName {
+    margin-top: 22px;
+}
 .democlass > tbody > tr > .edit {
     display: none;
 }

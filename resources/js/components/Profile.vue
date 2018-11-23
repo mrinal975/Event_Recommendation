@@ -12,7 +12,6 @@
                             <img  alt="Profile Picture" :src="showProfileImage(user.image)">
                         </div>
                     </div>
-                    
                     <div class="col-md-6">
                         <div class="profile-head">
                                     <h4>
@@ -22,7 +21,24 @@
                                     <button class="btn btn-info" v-if="$gate.userId()!=user.id" @click="followOrNotProfile()">
                                          {{followOrNot}}
                                          </button>
-                                    <br><br><br><br><br>
+                                         <br><br>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <a class="btn btn-success" style="color:white;" @click="followers">
+                                                followers
+                                                {{user.followers}}
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1"></div>
+                                        <div class="col-sm-4">
+                                        <a class="btn btn-success" style="color:white;" @click="following">
+                                            following
+                                            {{user.following}}
+                                        </a>
+                                        </div>
+                                       
+                                    </div>
+                                    <br><br>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -31,6 +47,51 @@
                         </div>
                     </div> 
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- The following Modal -->
+  <div class="modal fade" id="followemyModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal following Header  v-show="editmode" -->
+        <div class="modal-header">
+          <h4 class="modal-title"  v-show="!followmodel">Followers </h4>
+          <h4 class="modal-title"  v-show="followmodel">Following</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal following body -->
+        <div class="modal-body scrollable-model-body">
+            <div class="row" v-for="follow in follows" :key="follow.id">
+                <div class="col-sm-2">
+                    <img class="rounded-circle" alt="Profile" :src="showModelImage(follow.image)" height="60px" width="70px">
+                </div>
+                <div class="col-sm-7 followName">
+                    <a >{{follow.name}}</a>
+                </div>
+            </div>
+            <br>
+        </div>
+        <!-- Modal following footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>      
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-work">
@@ -119,7 +180,7 @@
                 </div>
                 <div class="col-md-7">
                     <!-- <img alt="Image test" height="130px" width="260px" src="/img/12.jpg"> -->
-                     <img  alt="Profile Picture" :src="modelProfileImage()" height="150px" width="260px">
+                     <img  alt="Profile Picture" :src="modelProfileImage()" height="150px" width="210px">
                 </div>
             </div>
             <div class="form-group">
@@ -204,11 +265,13 @@
 export default {
   data() {
     return {
+      followmodel: false,
       followOrNot: "",
       editmode: false,
       errors: "",
       errorInterest: "",
       id: this.$route.params.id,
+      follows: {},
       user: {},
       profilePicture: {
         picture: ""
@@ -234,6 +297,28 @@ export default {
     };
   },
   methods: {
+    showModelImage(profileImage) {
+      if (profileImage == "profile.png") {
+        return "img/" + profileImage;
+      } else {
+        let Image = "img/profile/" + profileImage;
+        return Image;
+      }
+    },
+    followers() {
+      this.followmodel = false;
+      $("#followemyModal").modal("show");
+      axios
+        .get("http://127.0.0.1:8000/api/followers/" + this.id)
+        .then(({ data }) => (this.follows = data.data));
+    },
+    following() {
+      this.followmodel = true;
+      $("#followemyModal").modal("show");
+      axios
+        .get("http://127.0.0.1:8000/api/following/" + this.id)
+        .then(({ data }) => (this.follows = data.data));
+    },
     followOrNotProfile() {
       axios
         .get("http://127.0.0.1:8000/api/follow/" + this.id)

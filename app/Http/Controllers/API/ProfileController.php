@@ -5,12 +5,15 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\ProfileRequest;
+use DB;
 use Auth;
 use Image;
 use App\User;
 use App\UserInterest;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Interest\InterestCollection;
+use App\Http\Resources\User\UserCollection;
+
 class ProfileController extends Controller
 {
     /**
@@ -54,19 +57,19 @@ class ProfileController extends Controller
         }
 
         $currentPhoto=$user->image;
-        if( $request->body['image'] !=$currentPhoto){
+        if($request->body['image'] !=$currentPhoto){
             $name=time().'.'. explode('/',explode(':',substr($request->body['image'],0,strpos($request->body['image'],';')))[1])[1];
             Image::make($request->body['image'])->save(public_path('img/profile/').$name);
-            // $request->merge(['image'=>$name]);
+          
             $userPhoto=public_path('img/profile/').$currentPhoto;
             if(file_exists($userPhoto)){
                 @unlink($userPhoto);
             }
+            $user->image=$name;
         }
         $user->name=$request->body['name'];
         $user->email=$request->body['email'];
         $user->phone=$request->body['phone'];
-        $user->image=$name;
         $user->update();
         return 0;
     }
@@ -108,9 +111,28 @@ class ProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $id 
      * @return \Illuminate\Http\Response
      */
+    public function following($id)
+    {
+        $data=DB::table('users')
+            ->join('friends','users.id','=','friends.whom')
+            ->select('users.*')
+            ->where(['friends.hwo' => $id])
+            ->get();
+        return UserCollection::collection($data);
+    }
+    public function followers($id)
+    {
+        $data=DB::table('users')
+            ->join('friends','users.id','=','friends.hwo')
+            ->select('users.*')
+            ->where(['friends.whom' => $id])
+            ->get();
+        return UserCollection::collection($data);
+    }
+
     public function destroy($id)
     {
         // 

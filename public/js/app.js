@@ -75244,15 +75244,78 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      followmodel: false,
       followOrNot: "",
       editmode: false,
       errors: "",
       errorInterest: "",
       id: this.$route.params.id,
+      follows: {},
       user: {},
       profilePicture: {
         picture: ""
@@ -75279,20 +75342,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
-    followOrNotProfile: function followOrNotProfile() {
+    showModelImage: function showModelImage(profileImage) {
+      if (profileImage == "profile.png") {
+        return "img/" + profileImage;
+      } else {
+        var Image = "img/profile/" + profileImage;
+        return Image;
+      }
+    },
+    followers: function followers() {
       var _this = this;
 
-      axios.get("http://127.0.0.1:8000/api/follow/" + this.id).then(function (_ref) {
+      this.followmodel = false;
+      $("#followemyModal").modal("show");
+      axios.get("http://127.0.0.1:8000/api/followers/" + this.id).then(function (_ref) {
         var data = _ref.data;
-        return _this.followOrNot = data;
+        return _this.follows = data.data;
+      });
+    },
+    following: function following() {
+      var _this2 = this;
+
+      this.followmodel = true;
+      $("#followemyModal").modal("show");
+      axios.get("http://127.0.0.1:8000/api/following/" + this.id).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.follows = data.data;
+      });
+    },
+    followOrNotProfile: function followOrNotProfile() {
+      var _this3 = this;
+
+      axios.get("http://127.0.0.1:8000/api/follow/" + this.id).then(function (_ref3) {
+        var data = _ref3.data;
+        return _this3.followOrNot = data;
       });
     },
     followStaus: function followStaus() {
-      var _this2 = this;
+      var _this4 = this;
 
-      axios.get("http://127.0.0.1:8000/api/followStaus/" + this.id).then(function (_ref2) {
-        var data = _ref2.data;
-        return _this2.followOrNot = data;
+      axios.get("http://127.0.0.1:8000/api/followStaus/" + this.id).then(function (_ref4) {
+        var data = _ref4.data;
+        return _this4.followOrNot = data;
       });
     },
     showProfileImage: function showProfileImage(profileImage) {
@@ -75312,7 +75403,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     ProfilePicture: function ProfilePicture(e) {
-      var _this3 = this;
+      var _this5 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -75335,7 +75426,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
 
       reader.onloadend = function (file) {
-        _this3.profile.image = reader.result;
+        _this5.profile.image = reader.result;
       };
       reader.readAsDataURL(file);
     },
@@ -75348,12 +75439,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(data);
     },
     updateInterst: function updateInterst() {
-      var _this4 = this;
+      var _this6 = this;
 
-      this.form.put("api/InterestUpdate/" + this.form.id).then(function (_ref3) {
-        var data = _ref3.data;
+      this.form.put("api/InterestUpdate/" + this.form.id).then(function (_ref5) {
+        var data = _ref5.data;
 
-        _this4.loadInterestOn();
+        _this6.loadInterestOn();
         toast({
           type: "success",
           title: "Updated successfully"
@@ -75362,17 +75453,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     addInterst: function addInterst() {
-      var _this5 = this;
+      var _this7 = this;
 
-      this.form.post("http://127.0.0.1:8000/api/personalInterest").then(function (_ref4) {
-        var data = _ref4.data;
+      this.form.post("http://127.0.0.1:8000/api/personalInterest").then(function (_ref6) {
+        var data = _ref6.data;
 
-        _this5.loadInterestOn();
+        _this7.loadInterestOn();
         toast({
           type: "success",
           title: "created successfully"
         });
-        _this5.$Progress.finish();
+        _this7.$Progress.finish();
         $("#Profile_Test_Model").modal("hide");
       });
     },
@@ -75385,34 +75476,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(profile);
     },
     loadInterestOn: function loadInterestOn() {
-      var _this6 = this;
+      var _this8 = this;
 
-      axios.get("http://127.0.0.1:8000/api/interest/" + this.id).then(function (_ref5) {
-        var data = _ref5.data;
-        return _this6.interests = data.data;
+      axios.get("http://127.0.0.1:8000/api/interest/" + this.id).then(function (_ref7) {
+        var data = _ref7.data;
+        return _this8.interests = data.data;
       });
     },
     loadUserInfo: function loadUserInfo() {
-      var _this7 = this;
+      var _this9 = this;
 
-      axios.get("http://127.0.0.1:8000/api/Profile/" + this.id).then(function (_ref6) {
-        var data = _ref6.data;
-        return _this7.user = data.data, _this7.profile = data.data;
+      axios.get("http://127.0.0.1:8000/api/Profile/" + this.id).then(function (_ref8) {
+        var data = _ref8.data;
+        return _this9.user = data.data, _this9.profile = data.data;
       });
     },
     updateinformation: function updateinformation() {
-      var _this8 = this;
+      var _this10 = this;
 
       axios.post("http://127.0.0.1:8000/api/Profile ", {
         body: this.profile
       }).then(function (response) {
-        _this8.$Progress.start();
-        _this8.loadUserInfo();
+        _this10.$Progress.start();
+        _this10.loadUserInfo();
         $("#Profile_Model").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
-        _this8.$Progress.finish();
+        _this10.$Progress.finish();
       }).catch(function (e) {
-        _this8.errors = "Name And email field is required";
+        _this10.errors = "Name And email field is required";
       });
     }
   },
@@ -75485,7 +75576,47 @@ var render = function() {
                         _vm._v(" "),
                         _c("br"),
                         _c("br"),
-                        _c("br"),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-4" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-success",
+                                staticStyle: { color: "white" },
+                                on: { click: _vm.followers }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                              followers\n                                              " +
+                                    _vm._s(_vm.user.followers) +
+                                    "\n                                          "
+                                )
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-sm-1" }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-sm-4" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-success",
+                                staticStyle: { color: "white" },
+                                on: { click: _vm.following }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                          following\n                                          " +
+                                    _vm._s(_vm.user.following) +
+                                    "\n                                      "
+                                )
+                              ]
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
                         _c("br"),
                         _c("br"),
                         _vm._v(" "),
@@ -75493,6 +75624,102 @@ var render = function() {
                       ])
                     ])
                   ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      attrs: { id: "followemyModal" }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-dialog" }, [
+                        _c("div", { staticClass: "modal-content" }, [
+                          _c("div", { staticClass: "modal-header" }, [
+                            _c(
+                              "h4",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: !_vm.followmodel,
+                                    expression: "!followmodel"
+                                  }
+                                ],
+                                staticClass: "modal-title"
+                              },
+                              [_vm._v("Followers ")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "h4",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.followmodel,
+                                    expression: "followmodel"
+                                  }
+                                ],
+                                staticClass: "modal-title"
+                              },
+                              [_vm._v("Following")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "close",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal"
+                                }
+                              },
+                              [_vm._v("×")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "modal-body scrollable-model-body" },
+                            [
+                              _vm._l(_vm.follows, function(follow) {
+                                return _c(
+                                  "div",
+                                  { key: follow.id, staticClass: "row" },
+                                  [
+                                    _c("div", { staticClass: "col-sm-2" }, [
+                                      _c("img", {
+                                        staticClass: "rounded-circle",
+                                        attrs: {
+                                          alt: "Profile",
+                                          src: _vm.showModelImage(follow.image),
+                                          height: "60px",
+                                          width: "70px"
+                                        }
+                                      })
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "col-sm-7 followName" },
+                                      [_c("a", [_vm._v(_vm._s(follow.name))])]
+                                    )
+                                  ]
+                                )
+                              }),
+                              _vm._v(" "),
+                              _c("br")
+                            ],
+                            2
+                          ),
+                          _vm._v(" "),
+                          _vm._m(1)
+                        ])
+                      ])
+                    ]
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "row" }, [
                     _c("div", { staticClass: "col-md-4" }, [
@@ -75621,7 +75848,7 @@ var render = function() {
                             },
                             [
                               _c("div", { staticClass: "row" }, [
-                                _vm._m(1),
+                                _vm._m(2),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
                                   _c("p", [
@@ -75633,7 +75860,7 @@ var render = function() {
                               ]),
                               _vm._v(" "),
                               _c("div", { staticClass: "row" }, [
-                                _vm._m(2),
+                                _vm._m(3),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
                                   _c("p", [
@@ -75645,7 +75872,7 @@ var render = function() {
                               ]),
                               _vm._v(" "),
                               _c("div", { staticClass: "row" }, [
-                                _vm._m(3),
+                                _vm._m(4),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
                                   _c("p", [
@@ -75682,7 +75909,7 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "modal-content" }, [
-                              _vm._m(4),
+                              _vm._m(5),
                               _vm._v(" "),
                               _c(
                                 "form",
@@ -75744,7 +75971,7 @@ var render = function() {
                                             alt: "Profile Picture",
                                             src: _vm.modelProfileImage(),
                                             height: "150px",
-                                            width: "260px"
+                                            width: "210px"
                                           }
                                         })
                                       ])
@@ -75923,7 +76150,7 @@ var render = function() {
                                     )
                                   ]),
                                   _vm._v(" "),
-                                  _vm._m(5)
+                                  _vm._m(6)
                                 ]
                               )
                             ])
@@ -76160,6 +76387,21 @@ var staticRenderFns = [
         ])
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-danger",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
   },
   function() {
     var _vm = this
