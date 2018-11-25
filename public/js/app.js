@@ -73460,36 +73460,42 @@ var render = function() {
                                 [_vm._v("Event Description")]
                               ),
                               _vm._v(" "),
-                              _c("textarea", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.form.eventDescription,
-                                    expression: "form.eventDescription"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                class: {
-                                  "is-invalid": _vm.form.errors.has(
-                                    "eventDescription"
-                                  )
-                                },
-                                attrs: { id: "eventDescription", rows: "3" },
-                                domProps: { value: _vm.form.eventDescription },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
+                              _c(
+                                "textarea",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.eventDescription,
+                                      expression: "form.eventDescription"
                                     }
-                                    _vm.$set(
-                                      _vm.form,
-                                      "eventDescription",
-                                      $event.target.value
+                                  ],
+                                  staticClass: "form-control",
+                                  class: {
+                                    "is-invalid": _vm.form.errors.has(
+                                      "eventDescription"
                                     )
+                                  },
+                                  attrs: { id: "eventDescription", rows: "3" },
+                                  domProps: {
+                                    value: _vm.form.eventDescription
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "eventDescription",
+                                        $event.target.value
+                                      )
+                                    }
                                   }
-                                }
-                              }),
+                                },
+                                [_vm._v("sd asd sa ")]
+                              ),
                               _vm._v(" "),
                               _c("has-error", {
                                 attrs: {
@@ -75303,8 +75309,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -75543,6 +75547,9 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-6" }, [
                       _c("div", { staticClass: "profile-head" }, [
+                        _c("br"),
+                        _c("br"),
+                        _vm._v(" "),
                         _c("h4", [
                           _vm._v(
                             "\n                                      " +
@@ -75803,39 +75810,6 @@ var render = function() {
                           attrs: { id: "myTabContent" }
                         },
                         [
-                          _vm.$gate.userId() == _vm.user.id
-                            ? _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "text-right pull-right display-detail-button ",
-                                  attrs: { id: "profile_details" }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-primary",
-                                      attrs: {
-                                        type: "button",
-                                        "data-toggle": "modal"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          _vm.openProfileModel(_vm.user)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                          Edit\n                      "
-                                      )
-                                    ]
-                                  )
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
                           _c(
                             "div",
                             {
@@ -75883,7 +75857,40 @@ var render = function() {
                                 ])
                               ])
                             ]
-                          )
+                          ),
+                          _vm._v(" "),
+                          _vm.$gate.userId() == _vm.user.id
+                            ? _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "text-right pull-right display-detail-button ",
+                                  attrs: { id: "profile_details" }
+                                },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary",
+                                      attrs: {
+                                        type: "button",
+                                        "data-toggle": "modal"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.openProfileModel(_vm.user)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                          Edit\n                      "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e()
                         ]
                       )
                     ]),
@@ -76236,49 +76243,87 @@ var render = function() {
                                         _c(
                                           "label",
                                           { attrs: { for: "Interest_on" } },
-                                          [_vm._v("Interest ")]
+                                          [_vm._v("Event Type")]
                                         ),
                                         _vm._v(" "),
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: _vm.form.Interest_on,
-                                              expression: "form.Interest_on"
-                                            }
-                                          ],
-                                          staticClass: "form-control",
-                                          class: {
-                                            "is-invalid": _vm.form.errors.has(
-                                              "Interest_on"
-                                            )
-                                          },
-                                          attrs: {
-                                            type: "test",
-                                            id: "Interest_on",
-                                            "aria-describedby": "emailHelp",
-                                            placeholder: "Interest on"
-                                          },
-                                          domProps: {
-                                            value: _vm.form.Interest_on
-                                          },
-                                          on: {
-                                            input: function($event) {
-                                              if ($event.target.composing) {
-                                                return
+                                        _c(
+                                          "select",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.form.Interest_on,
+                                                expression: "form.Interest_on"
                                               }
-                                              _vm.$set(
-                                                _vm.form,
-                                                "Interest_on",
-                                                $event.target.value
+                                            ],
+                                            staticClass: "form-control",
+                                            class: {
+                                              "is-invalid": _vm.form.errors.has(
+                                                "Interest_on"
                                               )
+                                            },
+                                            attrs: { id: "Interest_on" },
+                                            on: {
+                                              change: function($event) {
+                                                var $$selectedVal = Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function(o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function(o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                                _vm.$set(
+                                                  _vm.form,
+                                                  "Interest_on",
+                                                  $event.target.multiple
+                                                    ? $$selectedVal
+                                                    : $$selectedVal[0]
+                                                )
+                                              }
                                             }
-                                          }
-                                        }),
+                                          },
+                                          [
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "music" } },
+                                              [_vm._v("Music")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "study" } },
+                                              [_vm._v("Study")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "movie" } },
+                                              [_vm._v("Movie")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "work" } },
+                                              [_vm._v("Work")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "dancing" } },
+                                              [_vm._v("Dancing")]
+                                            )
+                                          ]
+                                        ),
                                         _vm._v(" "),
                                         _c("has-error", {
-                                          staticStyle: { "font-size": "15px" },
                                           attrs: {
                                             form: _vm.form,
                                             field: "Interest_on"

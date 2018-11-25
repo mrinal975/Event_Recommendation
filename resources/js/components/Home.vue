@@ -149,7 +149,7 @@
             <div class="form-group">
                 <label for="eventDescription">Event Description</label>
                 <textarea class="form-control" id="eventDescription" rows="3" v-model=form.eventDescription
-                :class="{ 'is-invalid': form.errors.has('eventDescription') }"></textarea>
+                :class="{ 'is-invalid': form.errors.has('eventDescription') }">sd asd sa </textarea>
                 <has-error :form="form" field="eventDescription"></has-error>
             </div>
         </div>

@@ -52,6 +52,8 @@ class EventController extends Controller
                 foreach ($userInterest as $data) {
                     $interst[]=$data->Interest_on;
                     $count++;
+                }if($count==0){
+                    $eventData=Event::where('createdBy',$userId)->latest()->paginate(5);
                 }
             }    
         }

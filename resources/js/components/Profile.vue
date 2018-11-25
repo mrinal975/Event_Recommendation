@@ -14,6 +14,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="profile-head">
+                            <br><br>
                                     <h4>
                                         {{user.name | empty}}
                                     </h4>
@@ -47,15 +48,6 @@
                         </div>
                     </div> 
                 </div>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -122,11 +114,6 @@
                     <div class="col-md-7 ">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <!-- Button trigger modal --> 
-                        <div  v-if="$gate.userId()==user.id" id="profile_details" class="text-right pull-right display-detail-button ">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" @click="openProfileModel(user)">
-                            Edit
-                        </button>
-                        </div>
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <div class="row">
                                     <div class="col-md-2">
@@ -153,6 +140,11 @@
                                     </div>
                                 </div> 
                             </div>
+                             <div  v-if="$gate.userId()==user.id" id="profile_details" class="text-right pull-right display-detail-button ">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" @click="openProfileModel(user)">
+                            Edit
+                        </button>
+                        </div>
                         </div>
                     </div>
 
@@ -231,10 +223,16 @@
         <form @submit.prevent="editmode ? updateInterst():addInterst()">
         <div class="modal-body">
            <div class="form-group">
-                <label for="Interest_on">Interest </label>
-                <input type="test" class="form-control" id="Interest_on" v-model=form.Interest_on aria-describedby="emailHelp" 
-                placeholder="Interest on" :class="{ 'is-invalid': form.errors.has('Interest_on') }">
-                <has-error :form="form" field="Interest_on" style="font-size:15px;"></has-error>
+                 <label for="Interest_on">Event Type</label>
+                <select class="form-control" id="Interest_on" v-model=form.Interest_on 
+                :class="{ 'is-invalid': form.errors.has('Interest_on') }">
+                    <option value="music">Music</option>
+                    <option value="study">Study</option>
+                    <option value="movie">Movie</option>
+                    <option value ="work">Work</option>
+                    <option value="dancing">Dancing</option>
+                </select>
+                <has-error :form="form" field="Interest_on"></has-error>
             </div>
         </div>
         <div class="modal-footer">
