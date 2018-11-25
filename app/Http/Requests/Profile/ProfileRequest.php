@@ -24,7 +24,7 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'Interest_on'=>'required|max:10'
+            'Interest_on'=>'required'
         ];
     }
 }

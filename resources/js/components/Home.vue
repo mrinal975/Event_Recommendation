@@ -1,13 +1,25 @@
 <template>
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-          <div class="form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+          <!-- <div class="row">
           <input type="text" class="form-control" id="usr" v-model="searchQuery" v-on:keyup="search"  name="username" placeholder="Search events" >
+          <input type="submit" value="search">
+
+        </div> -->
+      <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Search events"  v-model="searchQuery.searchText">
+      <div class="input-group-append">
+        <span class="input-group-text">From</span>
+        <input type="date" v-model="searchQuery.startDate">
+        <span class="input-group-text">To</span>
+        <input type="date" v-model="searchQuery.endDate">
+      </div>
+      <button type="submit" class="btn btn-primary" @click="search()">Search</button>
+    </div>
         </div>
-        </div>
-        <div class="col-sm-3"></div>
+        <div class="col-sm-1"></div>
         <div>
         </div>
       </div>
@@ -30,15 +42,15 @@
 							<span class="day">{{event.eventStartDate | EventDate}}</span>
 							<span class="month">{{event.eventStartDate | EventMonth}}</span>
 							<span class="year">{{event.eventStartDate | EventYear}}</span>
-							<span class="time">{{event.eventStartTime| EventTime}}</span>
+							<span class="time">{{event.eventStartTime | EventTime}}</span>
 						</time>
 						<img alt="Event Image" :src="showEventImage(event.eventImage)" />
 						<div class="info">
               <router-link  v-bind:to="'event/'+event.id">
-							<h2 class="title">{{event.eventName}}</h2>
+							<h4 class="title">{{event.eventName |upText}}</h4>
               </router-link>
-                           
-							<p class="desc">Bar Hopping in Erie, Pa.Bar Hopping in Erie, Pa</p>
+              <p class="desc ">Type : {{event.eventType}}</p>             
+							<p class="desc">{{event.eventDescription | upText | Des}}</p>
                
 							<ul>
 								<li style="width:25%;">
@@ -172,7 +184,11 @@
 export default {
   data() {
     return {
-      searchQuery: "",
+      searchQuery: {
+        searchText: "",
+        startDate: "",
+        endDate: ""
+      },
       InterestStatust: "Interested",
       goStatus: "Going",
       editmode: false,
@@ -195,11 +211,19 @@ export default {
   },
   methods: {
     search() {
-      if (this.searchQuery.length > 0) {
-        console.log("hi" + this.searchQuery);
+      if (
+        this.searchQuery.searchText.length > 0 ||
+        this.searchQuery.startDate.length > 0 ||
+        this.searchQuery.endDate.length > 0
+      ) {
         axios
-          .get("http://127.0.0.1:8000/api/search/" + this.searchQuery)
-          .then(({ data }) => (this.events = data.data));
+          .post(`http://127.0.0.1:8000/api/search `, {
+            body: this.searchQuery
+          })
+          .then(response => {
+            this.events = response.data.data;
+          })
+          .catch(e => {});
       }
     },
     goingOrNot(index, eventid) {

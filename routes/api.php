@@ -19,7 +19,7 @@ Route::get('insterestupdate/{id}', 'API\InterestedOnEventController@insterestupd
 Route::get('goingupdate/{id}', 'API\InterestedOnEventController@goingupdate');
 Route::get('totalGoing', 'API\InterestedOnEventController@totalgoing');
 Route::get('totalInterested', 'API\InterestedOnEventController@totalinterested');
-Route::get('search/{id}', 'API\SearchController@search');
+Route::post('search', 'API\SearchController@search');
 
 
 // Schedule Route

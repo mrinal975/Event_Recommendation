@@ -24,7 +24,7 @@ class ScheduleRequest extends FormRequest
     public function rules()
     {
         return [
-            'schedulerName'=>'required|max:15',
+            'schedulerName'=>'required|max:10',
             'schedulerStartDate'=>'required',
             'schedulerStartTime'=>'required',
             'schedulerEndDate'=>'required',

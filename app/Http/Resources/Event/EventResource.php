@@ -21,6 +21,7 @@ class EventResource extends JsonResource
             'eventName'=>$this->eventName,
             'eventPlace'=>$this->eventPlace,
             'eventImage'=>$this->eventImage,
+            'eventType'=>$this->eventType,
             'eventStartDate'=>$this->eventStartDate,
             'eventStartTime'=>$this->eventStartTime,
             'eventEndDate'=>$this->eventEndDate,

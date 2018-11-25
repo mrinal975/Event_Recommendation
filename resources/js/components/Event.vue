@@ -22,8 +22,8 @@
                                         <h4 class="card-title">{{event.eventPlace}}</h4>
                                         
                                         <p class="card-text">{{event.eventStartDate | EventDate}} {{event.eventStartDate | EventMonth}} {{event.eventStartDate | EventYear}}</p>
-                                        <p>{{event.eventStartTime | EventTime}}</p>
-
+                                        <p>Event will start at: {{event.eventStartTime | EventTime}}</p>
+                                        <p>Type of event : {{event.eventType}}</p>
                                         <a class="btn btn-primary" style="color:white;"
                                         @click="interestcheck(event.id)">
                                             {{event.intereststatus}}
@@ -35,6 +35,7 @@
                                             </a>
                                         <p>Going : {{event.totalGoing}} </p>
                                         <p>Interested : {{event.totalInterested}}</p>
+                                        <p>{{event.eventDescription}}</p>
                                         </div>
                                     </div>
                                </div>

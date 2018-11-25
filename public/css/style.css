@@ -5,7 +5,8 @@
     background: #a8c7c7;
 }
 .interestError {
-    font-size: 15px;
+    font-size: 16px;
+    color: red;
 }
 .addclass > tbody > tr > .edit {
     display: true;

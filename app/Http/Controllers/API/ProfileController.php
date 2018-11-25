@@ -142,17 +142,24 @@ class ProfileController extends Controller
         return InterestCollection::collection($data);
     }
     public function interestStore(ProfileRequest $request){
+        $userId=Auth::user('api')->id;
+        $checkExist=UserInterest::where('Interest_on','=',$request->Interest_on)->where('user_id','=',$userId)->first();
+        if(count($checkExist)!=0){
+            $validator->failed();
+        }
         $UserInterest=new UserInterest;
-        $UserInterest->user_id=Auth::user('api')->id;
+        $UserInterest->user_id=$userId;
         $UserInterest->Interest_on=$request->Interest_on;
         $UserInterest->save();
-        return 1; 
     }
     public function interestUpdate(ProfileRequest $request, $id){
+        $userId=Auth::user('api')->id;
         $interest=UserInterest::findOrfail($id);
+        $checkExist=UserInterest::where('Interest_on','=',$request->Interest_on)->where('user_id','=',$userId)->first();
+        if(count($checkExist)!=0){
+            $validator->failed();
+        }
         $interest->update($request->all());
-        return 1;
-
     }
     public function profilePicture(Request $request, $id){
         

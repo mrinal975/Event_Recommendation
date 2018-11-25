@@ -159,7 +159,6 @@ export default {
       this.editmode = false;
     },
     updateSchedule() {
-      console.log("clicked on update");
       this.form
         .put("api/schedule/" + this.form.id)
         .then(() => {

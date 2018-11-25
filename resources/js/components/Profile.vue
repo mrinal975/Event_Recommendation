@@ -16,7 +16,7 @@
                         <div class="profile-head">
                             <br><br>
                                     <h4>
-                                        {{user.name | empty}}
+                                        {{user.name | ememptyStringpty}}
                                     </h4>
                                     <br>
                                     <button class="btn btn-info" v-if="$gate.userId()!=user.id" @click="followOrNotProfile()">
@@ -120,7 +120,7 @@
                                         <label>Name</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.name | empty}}</p>
+                                        <p>{{user.name |emptyString}}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -128,7 +128,7 @@
                                         <label>Email</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.email | empty}}</p>
+                                        <p>{{user.email | emptyString}}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -136,7 +136,7 @@
                                         <label>Phone</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.phone | empty}}</p>
+                                        <p>{{user.phone | emptyString}}</p>
                                     </div>
                                 </div> 
                             </div>
@@ -168,7 +168,7 @@
                     <label for="eventImage">Picture</label>
                     <input type="File" class="form-control" id="eventImage" @change="ProfilePicture"
                      aria-describedby="emailHelp" :class="{ 'is-invalid': form.errors.has('eventImage') }">
-                    <has-error :form="form" field="eventImage"></has-error>
+                    <has-error class="interestError" :form="form" field="eventImage"></has-error>
                 </div>
                 <div class="col-md-7">
                     <!-- <img alt="Image test" height="130px" width="260px" src="/img/12.jpg"> -->
@@ -179,19 +179,19 @@
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" v-model=profile.name aria-describedby="emailHelp" 
                 placeholder="Event Place" :class="{ 'is-invalid': form.errors.has('name') }">
-                <has-error :form="form" field="name"></has-error>
+                <has-error class="interestError" :form="form" field="name"></has-error>
             </div>
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" class="form-control" id="email" v-model=profile.email aria-describedby="emailHelp" 
                 placeholder="Event Place" :class="{ 'is-invalid': form.errors.has('email') }">
-                <has-error :form="form" field="email"></has-error>
+                <has-error class="interestError"  :form="form" field="email"></has-error>
             </div>
             <div class="form-group">
                 <label for="phone">Phone </label>
                 <input type="phone" class="form-control" id="phone" v-model=profile.phone aria-describedby="emailHelp" 
                 placeholder="Event Place" :class="{ 'is-invalid': form.errors.has('phone') }">
-                <has-error :form="form" field="phone"></has-error>
+                <has-error class="interestError" :form="form" field="phone"></has-error>
             </div>
             
         </div>
@@ -223,7 +223,7 @@
         <form @submit.prevent="editmode ? updateInterst():addInterst()">
         <div class="modal-body">
            <div class="form-group">
-                 <label for="Interest_on">Event Type</label>
+                 <label for="Interest_on">Event On</label>
                 <select class="form-control" id="Interest_on" v-model=form.Interest_on 
                 :class="{ 'is-invalid': form.errors.has('Interest_on') }">
                     <option value="music">Music</option>
@@ -232,7 +232,7 @@
                     <option value ="work">Work</option>
                     <option value="dancing">Dancing</option>
                 </select>
-                <has-error :form="form" field="Interest_on"></has-error>
+                <p class="interestError">{{errorInterest}}</p>
             </div>
         </div>
         <div class="modal-footer">
@@ -277,8 +277,7 @@ export default {
       interests: {},
       form: new Form({
         id: "",
-        Interest_on: "",
-        ProfilePicture: ""
+        Interest_on: ""
       }),
       interest: {
         id: "",
@@ -384,14 +383,19 @@ export default {
       this.form.fill(data);
     },
     updateInterst() {
-      this.form.put("api/InterestUpdate/" + this.form.id).then(({ data }) => {
-        this.loadInterestOn();
-        toast({
-          type: "success",
-          title: "Updated successfully"
+      this.form
+        .put("api/InterestUpdate/" + this.form.id)
+        .then(({ data }) => {
+          this.loadInterestOn();
+          toast({
+            type: "success",
+            title: "Updated successfully"
+          });
+          $("#Profile_Test_Model").modal("hide");
+        })
+        .catch(e => {
+          this.errorInterest = "Interst type alreasy exist chose different one";
         });
-        $("#Profile_Test_Model").modal("hide");
-      });
     },
     addInterst() {
       this.form
@@ -404,6 +408,9 @@ export default {
           });
           this.$Progress.finish();
           $("#Profile_Test_Model").modal("hide");
+        })
+        .catch(e => {
+          this.errorInterest = "Interst type alreasy exist chose different one";
         });
     },
     AddInerestModel() {

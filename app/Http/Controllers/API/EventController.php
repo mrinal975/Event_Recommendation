@@ -53,22 +53,24 @@ class EventController extends Controller
                     $interst[]=$data->Interest_on;
                     $count++;
                 }if($count==0){
-                    $eventData=Event::where('createdBy',$userId)->latest()->paginate(5);
+                    $eventData=Event::where('eventStartDate','>',$dateToday)
+                    ->where('createdBy','=',$userId)
+                    ->latest()->paginate(5);
                 }
             }    
         }
         //checking data range
         if($count==2){
              $eventData=Event::whereIn('eventType',[$interst[0],$interst[1]])
-                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(3);
+                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(5);
         }
         elseif($count==1){
              $eventData=Event::whereIn('eventType',[$interst[0]])
-                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(3);
+                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(5);
         }
         elseif($count==3){
              $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2]])
-                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(3);
+                    ->whereDate('eventStartDate','>',$dateToday)->latest()->paginate(5);
         }
         return EventCollection::collection($eventData);
     }

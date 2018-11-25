@@ -22,6 +22,7 @@ class EventCollection extends Resource
             'eventType'=>$this->eventType,
             'eventName'=>$this->eventName,
             'eventPlace'=>$this->eventPlace,
+            'eventDescription'=>$this->eventDescription,
             'eventStartDate'=>$this->eventStartDate,
             'eventStartTime'=>$this->eventStartTime,
             'eventEndDate'=>$this->eventEndDate,

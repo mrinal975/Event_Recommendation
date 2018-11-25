@@ -7,6 +7,7 @@
 require("./bootstrap");
 
 window.Vue = require("vue");
+
 import VueRouter from "vue-router";
 import { Form, HasError, AlertError } from "vform";
 //Importing moment for Vue.js Date and Time
@@ -74,6 +75,27 @@ Vue.filter("upText", function(text) {
 Vue.filter("myDate", function(createDate) {
     return moment(createDate).format("MMMM Do YYYY");
 });
+Vue.filter("EventTime", function(text) {
+    var time = text.split(":");
+    return time[0] > 12
+        ? time[0] - 12 + " : " + time[1] + " PM"
+        : time[0] + ":" + time[1] + " Am";
+});
+Vue.filter("EventYear", function(eventStartDate) {
+    return moment(eventStartDate).format("YYYY");
+});
+Vue.filter("EventMonth", function(eventStartDate) {
+    return moment(eventStartDate).format("MMMM");
+});
+Vue.filter("EventDate", function(eventStartDate) {
+    return moment(eventStartDate).format("Do");
+});
+Vue.filter("Des", function(eventDescription) {
+    return eventDescription.length > 39
+        ? eventDescription.substr(0, 40)
+        : eventDescription;
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -111,23 +133,11 @@ const app = new Vue({
         }, 1000)
     }
 });
-
-Vue.filter("EventYear", function(eventStartDate) {
-    return moment(eventStartDate).format("YYYY");
-});
-Vue.filter("EventMonth", function(eventStartDate) {
-    return moment(eventStartDate).format("MMMM");
-});
-Vue.filter("EventDate", function(eventStartDate) {
-    return moment(eventStartDate).format("Do");
+vue.filter("Description", function(text) {
+    var temp = text.substr(0, 9);
+    return text;
 });
 
-Vue.filter("EventTime", function(eventStartTime) {
-    var time = eventStartTime.split(":");
-    return time[0] > 12
-        ? time[0] - 12 + " : " + time[1] + " PM"
-        : time[0] + ":" + time[1] + " Am";
-});
-Vue.filter("empty", function(data) {
-    return data == null || data == "" ? "not inputed" : data;
-});
+// Vue.filter("emptyString", function(stringData) {
+//     return stringData == null || stringData == "" ? "not inputed" : stringData;
+// });

@@ -19,23 +19,38 @@ class SearchController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function search($search)
+    public function search(Request $request)
     {
         $date=self::datecalculate();
-        $resultData= self::eventSearch($search,$date);
         $userId=Auth::user('api')->id;
-        $SecondUser=User::where('name','LIKE', '%' . $search . '%')->first();
-        if(count( $SecondUser)!=0)
-        {
-            $friend=Friend::where('hwo', $userId)->where('whom', $SecondUser->id)->first();
-            if(count( $friend)!=0){
-                $resultData= DB::table('events')
-                        ->join('interested_on_events','events.id','=','interested_on_events.event_id')
-                        ->select('events.*')
-                        ->where(['interested_on_events.user_id'=>$SecondUser->id])
-                        ->get();
+        $search =$request->body['searchText'];
+        $startDate =$request->body['startDate'];
+        $endDate =$request->body['endDate'];
+        if(empty($startDate) && empty($endDate)){
+            $resultData= self::eventSearch($search,$date);
+            $SecondUser=User::where('name','LIKE', '%' . $search . '%')->first();
+            if(count( $SecondUser)!=0)
+            {
+                $friend=Friend::where('hwo', $userId)->where('whom', $SecondUser->id)->first();
+                //return $friend;
+                if(count( $friend)!=0){
+                    $resultData= DB::table('events')
+                            ->join('interested_on_events','events.id','=','interested_on_events.event_id')
+                            ->select('events.*')
+                            ->where('interested_on_events.user_id','=',$SecondUser->id)
+                            ->get();
+                }
+            } 
+        }
+        else{
+            if(empty($endDate)){
+                $resultData=Event::where('eventStartDate','>=',$startDate)->get();
+            }else{
+                $resultData=Event::whereBetween('eventStartDate',array($startDate,$endDate))->get();
             }
-        }    
+           
+        }
+           
     return  EventCollection::collection($resultData); 
     }
     public function datecalculate(){

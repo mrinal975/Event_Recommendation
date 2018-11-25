@@ -32,7 +32,7 @@ class EventRequest extends FormRequest
             'eventStartTime'=>'required|max:50',
             'eventEndDate'=>'required|max:50',
             'eventEndTime'=>'required|max:50',
-            'eventDescription'=>'required|max:250'
+            'eventDescription'=>'required|max:250|min:25'
 
         ];
     }

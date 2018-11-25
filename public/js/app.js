@@ -30720,6 +30720,7 @@ __webpack_require__(142);
 window.Vue = __webpack_require__(164);
 
 
+
 //Importing moment for Vue.js Date and Time
 
 
@@ -30779,6 +30780,23 @@ Vue.filter("upText", function (text) {
 Vue.filter("myDate", function (createDate) {
     return __WEBPACK_IMPORTED_MODULE_2_moment___default()(createDate).format("MMMM Do YYYY");
 });
+Vue.filter("EventTime", function (text) {
+    var time = text.split(":");
+    return time[0] > 12 ? time[0] - 12 + " : " + time[1] + " PM" : time[0] + ":" + time[1] + " Am";
+});
+Vue.filter("EventYear", function (eventStartDate) {
+    return __WEBPACK_IMPORTED_MODULE_2_moment___default()(eventStartDate).format("YYYY");
+});
+Vue.filter("EventMonth", function (eventStartDate) {
+    return __WEBPACK_IMPORTED_MODULE_2_moment___default()(eventStartDate).format("MMMM");
+});
+Vue.filter("EventDate", function (eventStartDate) {
+    return __WEBPACK_IMPORTED_MODULE_2_moment___default()(eventStartDate).format("Do");
+});
+Vue.filter("Des", function (eventDescription) {
+    return eventDescription.length > 39 ? eventDescription.substr(0, 40) : eventDescription;
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -30807,29 +30825,18 @@ var app = new Vue({
         }, 1000)
     }
 });
-
-Vue.filter("EventYear", function (eventStartDate) {
-    return __WEBPACK_IMPORTED_MODULE_2_moment___default()(eventStartDate).format("YYYY");
-});
-Vue.filter("EventMonth", function (eventStartDate) {
-    return __WEBPACK_IMPORTED_MODULE_2_moment___default()(eventStartDate).format("MMMM");
-});
-Vue.filter("EventDate", function (eventStartDate) {
-    return __WEBPACK_IMPORTED_MODULE_2_moment___default()(eventStartDate).format("Do");
+vue.filter("Description", function (text) {
+    var temp = text.substr(0, 9);
+    return text;
 });
 
-Vue.filter("EventTime", function (eventStartTime) {
-    var time = eventStartTime.split(":");
-    return time[0] > 12 ? time[0] - 12 + " : " + time[1] + " PM" : time[0] + ":" + time[1] + " Am";
-});
-Vue.filter("empty", function (data) {
-    return data == null || data == "" ? "not inputed" : data;
-});
+// Vue.filter("emptyString", function(stringData) {
+//     return stringData == null || stringData == "" ? "not inputed" : stringData;
+// });
 
 /***/ }),
 /* 142 */
 /***/ (function(module, exports, __webpack_require__) {
-
 
 window._ = __webpack_require__(143);
 window.Popper = __webpack_require__(8).default;
@@ -30855,7 +30862,7 @@ try {
 
 window.axios = __webpack_require__(10);
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -30866,9 +30873,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
 } else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error("CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token");
 }
 
 /**
@@ -72050,6 +72057,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -72182,9 +72190,18 @@ var render = function() {
                             _vm._v(" "),
                             _c("p", [
                               _vm._v(
-                                _vm._s(
-                                  _vm._f("EventTime")(_vm.event.eventStartTime)
-                                )
+                                "Event will start at: " +
+                                  _vm._s(
+                                    _vm._f("EventTime")(
+                                      _vm.event.eventStartTime
+                                    )
+                                  )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(
+                                "Type of event : " + _vm._s(_vm.event.eventType)
                               )
                             ]),
                             _vm._v(" "),
@@ -72239,6 +72256,10 @@ var render = function() {
                                 "Interested : " +
                                   _vm._s(_vm.event.totalInterested)
                               )
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(_vm._s(_vm.event.eventDescription))
                             ])
                           ])
                         ],
@@ -72489,11 +72510,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      searchQuery: "",
+      searchQuery: {
+        searchText: "",
+        startDate: "",
+        endDate: ""
+      },
       InterestStatust: "Interested",
       goStatus: "Going",
       editmode: false,
@@ -72519,35 +72556,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     search: function search() {
       var _this = this;
 
-      if (this.searchQuery.length > 0) {
-        console.log("hi" + this.searchQuery);
-        axios.get("http://127.0.0.1:8000/api/search/" + this.searchQuery).then(function (_ref) {
-          var data = _ref.data;
-          return _this.events = data.data;
-        });
+      if (this.searchQuery.searchText.length > 0 || this.searchQuery.startDate.length > 0 || this.searchQuery.endDate.length > 0) {
+        axios.post("http://127.0.0.1:8000/api/search ", {
+          body: this.searchQuery
+        }).then(function (response) {
+          _this.events = response.data.data;
+        }).catch(function (e) {});
       }
     },
     goingOrNot: function goingOrNot(index, eventid) {
       var _this2 = this;
 
-      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref2) {
-        var data = _ref2.data;
+      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref) {
+        var data = _ref.data;
         return _this2.events[index]["goingstatus"] = data;
       });
-      axios.get("http://127.0.0.1:8000/api/totalGoing/").then(function (_ref3) {
-        var data = _ref3.data;
+      axios.get("http://127.0.0.1:8000/api/totalGoing/").then(function (_ref2) {
+        var data = _ref2.data;
         return _this2.events[index]["totalGoing"] = data;
       });
     },
     InterestedOrNot: function InterestedOrNot(index, eventid) {
       var _this3 = this;
 
-      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref4) {
-        var data = _ref4.data;
+      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref3) {
+        var data = _ref3.data;
         return _this3.events[index]["intereststatus"] = data;
       });
-      axios.get("http://127.0.0.1:8000/api/totalInterested/").then(function (_ref5) {
-        var data = _ref5.data;
+      axios.get("http://127.0.0.1:8000/api/totalInterested/").then(function (_ref4) {
+        var data = _ref4.data;
         return _this3.events[index]["totalInterested"] = data;
       });
     },
@@ -72618,8 +72655,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     loadEvents: function loadEvents() {
       var _this6 = this;
 
-      axios.get("api/event").then(function (_ref6) {
-        var data = _ref6.data;
+      axios.get("api/event").then(function (_ref5) {
+        var data = _ref5.data;
         return _this6.events = data.data;
       });
     },
@@ -72652,8 +72689,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this8 = this;
 
       this.$Progress.start();
-      this.form.post("api/event").then(function (_ref7) {
-        var data = _ref7.data;
+      this.form.post("api/event").then(function (_ref6) {
+        var data = _ref6.data;
 
         _this8.loadEvents();
         toast({
@@ -72682,41 +72719,97 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-sm-3" }),
+      _c("div", { staticClass: "col-sm-1" }),
       _vm._v(" "),
-      _c("div", { staticClass: "col-sm-6" }, [
-        _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "col-sm-10" }, [
+        _c("div", { staticClass: "input-group mb-3" }, [
           _c("input", {
             directives: [
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.searchQuery,
-                expression: "searchQuery"
+                value: _vm.searchQuery.searchText,
+                expression: "searchQuery.searchText"
               }
             ],
             staticClass: "form-control",
-            attrs: {
-              type: "text",
-              id: "usr",
-              name: "username",
-              placeholder: "Search events"
-            },
-            domProps: { value: _vm.searchQuery },
+            attrs: { type: "text", placeholder: "Search events" },
+            domProps: { value: _vm.searchQuery.searchText },
             on: {
-              keyup: _vm.search,
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.searchQuery = $event.target.value
+                _vm.$set(_vm.searchQuery, "searchText", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
+            _c("span", { staticClass: "input-group-text" }, [_vm._v("From")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.searchQuery.startDate,
+                  expression: "searchQuery.startDate"
+                }
+              ],
+              attrs: { type: "date" },
+              domProps: { value: _vm.searchQuery.startDate },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.searchQuery, "startDate", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "input-group-text" }, [_vm._v("To")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.searchQuery.endDate,
+                  expression: "searchQuery.endDate"
+                }
+              ],
+              attrs: { type: "date" },
+              domProps: { value: _vm.searchQuery.endDate },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.searchQuery, "endDate", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: { type: "submit" },
+              on: {
+                click: function($event) {
+                  _vm.search()
+                }
+              }
+            },
+            [_vm._v("Search")]
+          )
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-sm-3" }),
+      _c("div", { staticClass: "col-sm-1" }),
       _vm._v(" "),
       _c("div")
     ]),
@@ -72793,15 +72886,25 @@ var render = function() {
                             "router-link",
                             { attrs: { to: "event/" + event.id } },
                             [
-                              _c("h2", { staticClass: "title" }, [
-                                _vm._v(_vm._s(event.eventName))
+                              _c("h4", { staticClass: "title" }, [
+                                _vm._v(
+                                  _vm._s(_vm._f("upText")(event.eventName))
+                                )
                               ])
                             ]
                           ),
                           _vm._v(" "),
+                          _c("p", { staticClass: "desc " }, [
+                            _vm._v("Type : " + _vm._s(event.eventType))
+                          ]),
+                          _vm._v(" "),
                           _c("p", { staticClass: "desc" }, [
                             _vm._v(
-                              "Bar Hopping in Erie, Pa.Bar Hopping in Erie, Pa"
+                              _vm._s(
+                                _vm._f("Des")(
+                                  _vm._f("upText")(event.eventDescription)
+                                )
+                              )
                             )
                           ]),
                           _vm._v(" "),
@@ -73799,7 +73902,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     updateSchedule: function updateSchedule() {
       var _this = this;
 
-      console.log("clicked on update");
       this.form.put("api/schedule/" + this.form.id).then(function () {
         //success
         _this.$Progress.start();
@@ -75327,8 +75429,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       interests: {},
       form: new Form({
         id: "",
-        Interest_on: "",
-        ProfilePicture: ""
+        Interest_on: ""
       }),
       interest: {
         id: "",
@@ -75454,6 +75555,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           title: "Updated successfully"
         });
         $("#Profile_Test_Model").modal("hide");
+      }).catch(function (e) {
+        _this6.errorInterest = "Interst type alreasy exist chose different one";
       });
     },
     addInterst: function addInterst() {
@@ -75469,6 +75572,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
         _this7.$Progress.finish();
         $("#Profile_Test_Model").modal("hide");
+      }).catch(function (e) {
+        _this7.errorInterest = "Interst type alreasy exist chose different one";
       });
     },
     AddInerestModel: function AddInerestModel() {
@@ -75553,7 +75658,9 @@ var render = function() {
                         _c("h4", [
                           _vm._v(
                             "\n                                      " +
-                              _vm._s(_vm._f("empty")(_vm.user.name)) +
+                              _vm._s(
+                                _vm._f("ememptyStringpty")(_vm.user.name)
+                              ) +
                               "\n                                  "
                           )
                         ]),
@@ -75827,7 +75934,9 @@ var render = function() {
                                 _c("div", { staticClass: "col-md-6" }, [
                                   _c("p", [
                                     _vm._v(
-                                      _vm._s(_vm._f("empty")(_vm.user.name))
+                                      _vm._s(
+                                        _vm._f("emptyString")(_vm.user.name)
+                                      )
                                     )
                                   ])
                                 ])
@@ -75839,7 +75948,9 @@ var render = function() {
                                 _c("div", { staticClass: "col-md-6" }, [
                                   _c("p", [
                                     _vm._v(
-                                      _vm._s(_vm._f("empty")(_vm.user.email))
+                                      _vm._s(
+                                        _vm._f("emptyString")(_vm.user.email)
+                                      )
                                     )
                                   ])
                                 ])
@@ -75851,7 +75962,9 @@ var render = function() {
                                 _c("div", { staticClass: "col-md-6" }, [
                                   _c("p", [
                                     _vm._v(
-                                      _vm._s(_vm._f("empty")(_vm.user.phone))
+                                      _vm._s(
+                                        _vm._f("emptyString")(_vm.user.phone)
+                                      )
                                     )
                                   ])
                                 ])
@@ -75963,6 +76076,7 @@ var render = function() {
                                           }),
                                           _vm._v(" "),
                                           _c("has-error", {
+                                            staticClass: "interestError",
                                             attrs: {
                                               form: _vm.form,
                                               field: "eventImage"
@@ -76031,6 +76145,7 @@ var render = function() {
                                         }),
                                         _vm._v(" "),
                                         _c("has-error", {
+                                          staticClass: "interestError",
                                           attrs: {
                                             form: _vm.form,
                                             field: "name"
@@ -76089,6 +76204,7 @@ var render = function() {
                                         }),
                                         _vm._v(" "),
                                         _c("has-error", {
+                                          staticClass: "interestError",
                                           attrs: {
                                             form: _vm.form,
                                             field: "email"
@@ -76147,6 +76263,7 @@ var render = function() {
                                         }),
                                         _vm._v(" "),
                                         _c("has-error", {
+                                          staticClass: "interestError",
                                           attrs: {
                                             form: _vm.form,
                                             field: "phone"
@@ -76236,102 +76353,96 @@ var render = function() {
                                 },
                                 [
                                   _c("div", { staticClass: "modal-body" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "form-group" },
-                                      [
-                                        _c(
-                                          "label",
-                                          { attrs: { for: "Interest_on" } },
-                                          [_vm._v("Event Type")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "select",
-                                          {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.form.Interest_on,
-                                                expression: "form.Interest_on"
-                                              }
-                                            ],
-                                            staticClass: "form-control",
-                                            class: {
-                                              "is-invalid": _vm.form.errors.has(
-                                                "Interest_on"
-                                              )
-                                            },
-                                            attrs: { id: "Interest_on" },
-                                            on: {
-                                              change: function($event) {
-                                                var $$selectedVal = Array.prototype.filter
-                                                  .call(
-                                                    $event.target.options,
-                                                    function(o) {
-                                                      return o.selected
-                                                    }
-                                                  )
-                                                  .map(function(o) {
-                                                    var val =
-                                                      "_value" in o
-                                                        ? o._value
-                                                        : o.value
-                                                    return val
-                                                  })
-                                                _vm.$set(
-                                                  _vm.form,
-                                                  "Interest_on",
-                                                  $event.target.multiple
-                                                    ? $$selectedVal
-                                                    : $$selectedVal[0]
-                                                )
-                                              }
+                                    _c("div", { staticClass: "form-group" }, [
+                                      _c(
+                                        "label",
+                                        { attrs: { for: "Interest_on" } },
+                                        [_vm._v("Event On")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "select",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.form.Interest_on,
+                                              expression: "form.Interest_on"
                                             }
-                                          },
-                                          [
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "music" } },
-                                              [_vm._v("Music")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "study" } },
-                                              [_vm._v("Study")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "movie" } },
-                                              [_vm._v("Movie")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "work" } },
-                                              [_vm._v("Work")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "dancing" } },
-                                              [_vm._v("Dancing")]
+                                          ],
+                                          staticClass: "form-control",
+                                          class: {
+                                            "is-invalid": _vm.form.errors.has(
+                                              "Interest_on"
                                             )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c("has-error", {
-                                          attrs: {
-                                            form: _vm.form,
-                                            field: "Interest_on"
+                                          },
+                                          attrs: { id: "Interest_on" },
+                                          on: {
+                                            change: function($event) {
+                                              var $$selectedVal = Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function(o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function(o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                              _vm.$set(
+                                                _vm.form,
+                                                "Interest_on",
+                                                $event.target.multiple
+                                                  ? $$selectedVal
+                                                  : $$selectedVal[0]
+                                              )
+                                            }
                                           }
-                                        })
-                                      ],
-                                      1
-                                    )
+                                        },
+                                        [
+                                          _c(
+                                            "option",
+                                            { attrs: { value: "music" } },
+                                            [_vm._v("Music")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "option",
+                                            { attrs: { value: "study" } },
+                                            [_vm._v("Study")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "option",
+                                            { attrs: { value: "movie" } },
+                                            [_vm._v("Movie")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "option",
+                                            { attrs: { value: "work" } },
+                                            [_vm._v("Work")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "option",
+                                            { attrs: { value: "dancing" } },
+                                            [_vm._v("Dancing")]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "p",
+                                        { staticClass: "interestError" },
+                                        [_vm._v(_vm._s(_vm.errorInterest))]
+                                      )
+                                    ])
                                   ]),
                                   _vm._v(" "),
                                   _c("div", { staticClass: "modal-footer" }, [
