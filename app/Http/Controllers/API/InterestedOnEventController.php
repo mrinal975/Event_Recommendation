@@ -66,13 +66,13 @@ class InterestedOnEventController extends Controller
        }
     }
 
-    public function totalgoing(){
+    public function totalgoing($eventid){
         //for going status is 1
-        return count(InterestedOnEvent::where('Interest_type',1)->get());
+        return count(InterestedOnEvent::where('event_id','=',$eventid)->where('Interest_type','=',1)->get());
     }
-    public function totalinterested(){
+    public function totalinterested($eventid){
         //for Interest status is 2
-        return count(InterestedOnEvent::where('Interest_type',2)->get());
+        return count(InterestedOnEvent::where('event_id','=',$eventid)->where('Interest_type',2)->get());
     }
 
     /**

@@ -16,7 +16,7 @@
                                     v-for="(schedule,index) in schedules" :key="index" :value="schedule.value" >
                                       <div class="row">
                                         <div class="col-md-11">
-                                          <h2 class="text-center top-style">{{schedule.schedulerName}}</h2>
+                                          <h2 class="text-center top-style">{{schedule.schedulerName | upText}}</h2>
                                            <p class="text-center">
                                             <span class="time">{{schedule.schedulerStartTime| EventTime}}</span>
                                           </p>
@@ -26,7 +26,7 @@
                                             <span class="year">{{schedule.schedulerStartDate | EventYear}}</span>
                                             
                                           </p>
-                                        <p class="text-center">Short Description of the Task</p>
+                                        <p class="text-center">{{schedule.schedulerDescription | upText | Des}}</p>
                                         </div>
                                         <div class="col-md-1">
                                            <div class="float-right">

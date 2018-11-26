@@ -24,23 +24,27 @@ class SearchController extends Controller
         $date=self::datecalculate();
         $userId=Auth::user('api')->id;
         $search =$request->body['searchText'];
+        // return $search;
         $startDate =$request->body['startDate'];
         $endDate =$request->body['endDate'];
         if(empty($startDate) && empty($endDate)){
+            
             $resultData= self::eventSearch($search,$date);
+            if(count($resultData)==0){
             $SecondUser=User::where('name','LIKE', '%' . $search . '%')->first();
-            if(count( $SecondUser)!=0)
-            {
-                $friend=Friend::where('hwo', $userId)->where('whom', $SecondUser->id)->first();
-                //return $friend;
-                if(count( $friend)!=0){
-                    $resultData= DB::table('events')
-                            ->join('interested_on_events','events.id','=','interested_on_events.event_id')
-                            ->select('events.*')
-                            ->where('interested_on_events.user_id','=',$SecondUser->id)
-                            ->get();
-                }
-            } 
+                if(count( $SecondUser)!=0)
+                {
+                    $friend=Friend::where('hwo', $userId)->where('whom', $SecondUser->id)->first();
+                    //return $friend;
+                    if(count( $friend)!=0){
+                        $resultData= DB::table('events')
+                                ->join('interested_on_events','events.id','=','interested_on_events.event_id')
+                                ->select('events.*')
+                                ->where('interested_on_events.user_id','=',$SecondUser->id)
+                                ->get();
+                    }
+                } 
+            }
         }
         else{
             if(empty($endDate)){
@@ -54,23 +58,20 @@ class SearchController extends Controller
     return  EventCollection::collection($resultData); 
     }
     public function datecalculate(){
-        $dateFrom = date('Y-m-d');
-        $dateExplode=explode('-',$dateFrom);
-        $dateExplode[2]=$dateExplode[2]+5;
-        $date=$dateExplode[0].'-'.$dateExplode[1].'-'.$dateExplode[2]; 
+        $dateFrom = date('Y-m-d'); 
         return $dateFrom;
     }
     public function eventSearch($search,$date){
 
-        $eventName =Event::where('eventStartDate','>',$date)
+        $eventName =Event::where('eventStartDate','>=',$date)
                     ->where('eventName','LIKE', '%' . $search . '%')
 				    ->orderBy('id','DESC')
                     ->get();
-        $eventPlace= Event::where('eventStartDate','>',$date)
+        $eventPlace= Event::where('eventStartDate','>=',$date)
                     ->where('eventPlace','LIKE', '%' . $search . '%')
 				    ->orderBy('id','DESC')
                     ->get();
-        $eventType= Event::where('eventStartDate','>',$date)
+        $eventType= Event::where('eventStartDate','>=',$date)
                     ->where('eventType','LIKE', '%' . $search . '%')
 				    ->orderBy('id','DESC')
                      ->get();

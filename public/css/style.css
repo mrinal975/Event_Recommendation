@@ -254,7 +254,7 @@ body {
     .event-list > li {
         position: relative;
         display: block;
-        width: 100%;
+        width: 120%;
         height: 120px;
         padding: 0px;
     }

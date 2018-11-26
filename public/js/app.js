@@ -72561,6 +72561,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           body: this.searchQuery
         }).then(function (response) {
           _this.events = response.data.data;
+          _this.searchQuery.searchText = "";
         }).catch(function (e) {});
       }
     },
@@ -72571,7 +72572,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var data = _ref.data;
         return _this2.events[index]["goingstatus"] = data;
       });
-      axios.get("http://127.0.0.1:8000/api/totalGoing/").then(function (_ref2) {
+      axios.get("http://127.0.0.1:8000/api/totalGoing/" + eventid).then(function (_ref2) {
         var data = _ref2.data;
         return _this2.events[index]["totalGoing"] = data;
       });
@@ -72583,7 +72584,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var data = _ref3.data;
         return _this3.events[index]["intereststatus"] = data;
       });
-      axios.get("http://127.0.0.1:8000/api/totalInterested/").then(function (_ref4) {
+      axios.get("http://127.0.0.1:8000/api/totalInterested/" + eventid).then(function (_ref4) {
         var data = _ref4.data;
         return _this3.events[index]["totalInterested"] = data;
       });
@@ -74049,7 +74050,9 @@ var render = function() {
                         _c("div", { staticClass: "row" }, [
                           _c("div", { staticClass: "col-md-11" }, [
                             _c("h2", { staticClass: "text-center top-style" }, [
-                              _vm._v(_vm._s(schedule.schedulerName))
+                              _vm._v(
+                                _vm._s(_vm._f("upText")(schedule.schedulerName))
+                              )
                             ]),
                             _vm._v(" "),
                             _c("p", { staticClass: "text-center" }, [
@@ -74097,7 +74100,15 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("p", { staticClass: "text-center" }, [
-                              _vm._v("Short Description of the Task")
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("Des")(
+                                    _vm._f("upText")(
+                                      schedule.schedulerDescription
+                                    )
+                                  )
+                                )
+                              )
                             ])
                           ]),
                           _vm._v(" "),

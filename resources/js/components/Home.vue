@@ -222,6 +222,7 @@ export default {
           })
           .then(response => {
             this.events = response.data.data;
+            this.searchQuery.searchText = "";
           })
           .catch(e => {});
       }
@@ -231,7 +232,7 @@ export default {
         .get("http://127.0.0.1:8000/api/goingupdate/" + eventid)
         .then(({ data }) => (this.events[index]["goingstatus"] = data));
       axios
-        .get("http://127.0.0.1:8000/api/totalGoing/")
+        .get("http://127.0.0.1:8000/api/totalGoing/" + eventid)
         .then(({ data }) => (this.events[index]["totalGoing"] = data));
     },
     InterestedOrNot(index, eventid) {
@@ -239,7 +240,7 @@ export default {
         .get("http://127.0.0.1:8000/api/insterestupdate/" + eventid)
         .then(({ data }) => (this.events[index]["intereststatus"] = data));
       axios
-        .get("http://127.0.0.1:8000/api/totalInterested/")
+        .get("http://127.0.0.1:8000/api/totalInterested/" + eventid)
         .then(({ data }) => (this.events[index]["totalInterested"] = data));
     },
     showEventImage(eventImage) {

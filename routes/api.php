@@ -17,8 +17,8 @@ Route::get('followStaus/{id}', 'API\FriendController@followStaus');
 
 Route::get('insterestupdate/{id}', 'API\InterestedOnEventController@insterestupdate');
 Route::get('goingupdate/{id}', 'API\InterestedOnEventController@goingupdate');
-Route::get('totalGoing', 'API\InterestedOnEventController@totalgoing');
-Route::get('totalInterested', 'API\InterestedOnEventController@totalinterested');
+Route::get('totalGoing/{id}', 'API\InterestedOnEventController@totalgoing');
+Route::get('totalInterested/{id}', 'API\InterestedOnEventController@totalinterested');
 Route::post('search', 'API\SearchController@search');
 
 
