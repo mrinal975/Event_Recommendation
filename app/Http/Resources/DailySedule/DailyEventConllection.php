@@ -29,6 +29,7 @@ class DailyEventConllection extends Resource
             'eventEndTime'=>$this->eventEndTime,
             'createdBy'=>$this->createdBy,
             'createdByName'=>$user->name,
+            'eventDescription'=>$this->eventDescription,
             'totalGoing'=>count(InterestedOnEvent::where('Interest_type',1)->where('event_id',$this->id)->get()),
             'totalInterested'=>count(InterestedOnEvent::where('Interest_type',2)->where('event_id',$this->id)->get()),
             'intereststatus'=>InterestedOnEvent::where('user_id',Auth::user('api')->id)

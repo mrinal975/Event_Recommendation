@@ -25,7 +25,7 @@
                                                         <span class="month">{{event.eventStartDate | EventMonth}}</span>
                                                         <span class="year">{{event.eventStartDate | EventYear}}</span>
                                                     </p>
-                                                    <p class="card-text">Short Description of the project</p>
+                                                    <p class="card-text">{{event.eventDescription | upText | Des}}</p>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="float-right">
@@ -55,7 +55,7 @@
                                             <span class="year">{{schedule.schedulerStartDate | EventYear}}</span>
                                             
                                           </p>
-                                        <p class="text-center">Short Description of the Task</p>
+                                        <p class="text-center">{{schedule.schedulerDescription | upText | Des}}</p>
                                     </div>
                                </div>
                             </div>

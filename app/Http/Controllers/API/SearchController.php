@@ -50,7 +50,7 @@ class SearchController extends Controller
             if(empty($endDate)){
                 $resultData=Event::where('eventStartDate','>=',$startDate)->get();
             }else{
-                $resultData=Event::whereBetween('eventStartDate',array($startDate,$endDate))->get();
+                $resultData=Event::whereBetween('eventStartDate','>=',array($startDate,$endDate))->get();
             }
            
         }

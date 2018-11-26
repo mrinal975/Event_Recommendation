@@ -45,7 +45,6 @@ class EventController extends Controller
                 $count++;
                 }           
             }
-        
             //fetching three interested thing
             //return $count;
         if($count==0){ 

@@ -72635,6 +72635,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         $("#exampleModal").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
         _this5.$Progress.finish();
+        _this5.editmode = false;
       }).catch(function () {
         //error
         swal("Fail!", "updated failed", "warning");
@@ -74984,7 +74985,15 @@ var render = function() {
                                   ]),
                                   _vm._v(" "),
                                   _c("p", { staticClass: "card-text" }, [
-                                    _vm._v("Short Description of the project")
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm._f("Des")(
+                                          _vm._f("upText")(
+                                            event.eventDescription
+                                          )
+                                        )
+                                      )
+                                    )
                                   ])
                                 ],
                                 1
@@ -75083,7 +75092,15 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("p", { staticClass: "text-center" }, [
-                            _vm._v("Short Description of the Task")
+                            _vm._v(
+                              _vm._s(
+                                _vm._f("Des")(
+                                  _vm._f("upText")(
+                                    schedule.schedulerDescription
+                                  )
+                                )
+                              )
+                            )
                           ])
                         ]
                       )

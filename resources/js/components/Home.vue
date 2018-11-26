@@ -290,6 +290,7 @@ export default {
           $("#exampleModal").modal("hide");
           swal("Updated!", "Information has been updated.", "success");
           this.$Progress.finish();
+          this.editmode = false;
         })
         .catch(() => {
           //error
