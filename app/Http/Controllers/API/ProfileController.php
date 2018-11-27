@@ -174,6 +174,18 @@ class ProfileController extends Controller
     public function totalFollowers($id){
         return count(Friend::where('whom','=',$id)->get());
     }
+    public function profileTypeChange(){
+        $userId=Auth::user('api');
+        if($userId->status==0){
+            $userId->status=1;
+            $userId->update();
+            return 'Private';
+        }else{
+            $userId->status=0;
+            $userId->update();
+            return 'Public';
+        }
+    }
     
     
 }

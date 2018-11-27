@@ -15,6 +15,10 @@ Route::post('personalInterest', 'API\ProfileController@interestStore');
 Route::put('InterestUpdate/{id}', 'API\ProfileController@interestUpdate');
 Route::get('follow/{id}', 'API\FriendController@followOrNot');
 Route::get('followStaus/{id}', 'API\FriendController@followStaus');
+//UserList
+Route::get('loadUserList', 'API\EventController@userList');
+//Evenvt Type Wise Data
+Route::get('eventWithType/{id}', 'API\EventController@eventWithType');
 
 Route::get('insterestupdate/{id}', 'API\InterestedOnEventController@insterestupdate');
 Route::get('goingupdate/{id}', 'API\InterestedOnEventController@goingupdate');
@@ -25,6 +29,8 @@ Route::post('search', 'API\SearchController@search');
 //Total following or followers
 Route::get('totalFollwing/{id}', 'API\ProfileController@totalFollwing');
 Route::get('totalFollowers/{id}', 'API\ProfileController@totalFollowers');
+//Profile type
+Route::get('profileType', 'API\ProfileController@profileTypeChange');
 
 // Schedule Route
 Route::apiResource('schedule','API\SchedulerController');

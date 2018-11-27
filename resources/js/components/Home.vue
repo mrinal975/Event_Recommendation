@@ -1,13 +1,8 @@
 <template>
-    <div class="container">
+    <div class="container classbg">
       <div class="row justify-content-center">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
-          <!-- <div class="row">
-          <input type="text" class="form-control" id="usr" v-model="searchQuery" v-on:keyup="search"  name="username" placeholder="Search events" >
-          <input type="submit" value="search">
-
-        </div> -->
       <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="Search events"  v-model="searchQuery.searchText">
       <div class="input-group-append">
@@ -23,9 +18,55 @@
         <div>
         </div>
       </div>
-        <div class="row justify-content-center">
-            <div class="col-md-11">
-                <div class="card card-default"> 
+        <div class="row">
+<!-- left side bar user list Start-->
+          <div class="col-md-2">
+            <!-- <br><br> -->
+            <div class="row" style="position:fixed;">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="text-center">User List</h5>
+                  <div class="list-group">
+                  <!-- <a href="#" class="list-group-item list-group-item-action active">
+                    Cras justo odio
+                  </a> -->
+                  <div v-for="(userList,index) in userLists" :key="index" :value="userList.value">
+                    <router-link  v-bind:to="'/profile/'+userList.id" class="list-group-item list-group-item-action">
+                  {{userList.name}}
+                  </router-link>
+                  </div>
+                </div>
+      <ul class="pagination">
+   
+        <!-- loadUserList pagination -->
+        <li  v-bind:class="[{disabled: !userPagination.prev_page_url}]" class="page-item">
+          <a class="page-link"  @click="loadUserList(userPagination.prev_page_url)">
+          <i class="fas fa-arrow-left"></i>
+          </a>
+        </li>
+        <!-- loadUserList pagination End-->
+        <li class="page-item disabled">
+          <a class="page-link text-dark">{{ userPagination.current_page }} of {{ userPagination.last_page }}
+          </a>
+        </li>
+        <!--  loadUserList pagination   -->
+        <li  v-bind:class="[{disabled: !userPagination.next_page_url}]" class="page-item">
+          <a class="page-link" @click="loadUserList(userPagination.next_page_url)">
+           <i class="fas fa-arrow-right"></i> 
+          </a>
+        </li>
+        
+  </ul>
+                </div>
+              </div>
+            </div>
+            </div>
+<!-- left side bar user list End-->
+
+<!-- Main bar Event list Start-->
+            <div class="col-md-8">
+              <!-- Card start -->
+                <div class="card"> 
                     <div class="card-body">
                 <!-- Button trigger modal -->
                         <button type="button" class="btn btn-primary" 
@@ -53,34 +94,106 @@
 							<p class="desc">{{event.eventDescription | upText | Des}}</p>
                
 							<ul>
-								<li style="width:25%;">
+								<li style="width:23%;">
                   <a class="glyphicon glyphicon-ok" @click="goingOrNot(index,event.id)">
+                 <br>
                  {{event.goingstatus}}
                   </a></li>
 								<li style="width:27%;">
 
                   <a class="glyphicon glyphicon-ok" @click="InterestedOrNot(index,event.id)">
+                  <br>
                   {{event.intereststatus}}
                   </a>
                  </li>
-								<li style="width:21%;">{{event.totalGoing}} Going</li>
-                <li style="width:27%;">{{event.totalInterested}} Interested</li>
+								<li style="width:18%;">{{event.totalGoing}} <br> Going</li>
+                <li style="width:20%;">{{event.totalInterested}} <br> Interested</li>
 							</ul>
 						</div>
-						<div class="social">
-							<ul>
-								<li v-if="$gate.userId()==event.createdBy" class="facebook" style="width:33%;"><a @click="editEvent(event)"><i class="fas fa-edit" title="Edit Event"></i></a></li>
-								<li v-if="$gate.userId()==event.createdBy" class="twitter" style="width:34%;"><a @click="deleteEvent(event.id)"><i class="fas fa-trash" title="Delete Event"></i></a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-
-
-			</div>
-                    </div>
+						  <div class="social">
+                  <ul>
+                    <li v-if="$gate.userId()==event.createdBy" class="facebook" style="width:33%;"><a @click="editEvent(event)"><i class="fas fa-edit" title="Edit Event"></i></a></li>
+                    <li v-if="$gate.userId()==event.createdBy" class="twitter" style="width:34%;"><a @click="deleteEvent(event.id)"><i class="fas fa-trash" title="Delete Event"></i></a></li>
+                  </ul>
                 </div>
-                <div>            
+                </li>
+				      </ul>
+			            </div>
+                </div>
+              </div>
+
+ <nav aria-label="Page navigation example">
+  <ul class="pagination float-right">
+    <!-- Event type wise Data Links Previous  -->
+        <li v-show="eventTypeModel" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
+          <a class="page-link"  @click="eventTypeData(showEventType,pagination.prev_page_url)">
+            Previous 
+          </a>
+        </li>
+        <!-- Search mode -->
+        <li v-show="searchmode" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
+          <a class="page-link"  @click="search(pagination.prev_page_url)">
+            Previous 
+          </a>
+        </li>
+        <!-- Search mode End  -->
+        <!-- Default Mode    -->
+        <li v-show="!searchmode && !eventTypeModel" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
+          <a class="page-link"  @click="loadEvents(pagination.prev_page_url)">
+            Previous
+          </a>
+        </li>
+        <!--  Default Mode End   -->
+        <li class="page-item disabled">
+          <a class="page-link text-dark">Page {{ pagination.current_page }} of {{ pagination.last_page }}
+          </a>
+        </li>
+        <!-- Default Main Next -->
+        <li v-show="!searchmode && !eventTypeModel" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
+          <a class="page-link" @click="loadEvents(pagination.next_page_url)">
+            Next 
+          </a>
+        </li>
+        <!--  Search mode   -->
+        <li v-show="searchmode" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
+          <a class="page-link" @click="search(pagination.next_page_url)">
+             Next
+          </a>
+        </li>
+         <!--  Event type wise Data Links Next    -->
+        <li v-show="eventTypeModel" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
+          <a class="page-link" @click="eventTypeData(showEventType,pagination.next_page_url)">
+            Next
+          </a>
+        </li>
+        <!-- Search mode End -->
+  </ul>
+</nav>
+              <!-- Card End -->
+
+          </div>
+          <!-- Main bar Event list End -->
+          <div class="col-md-2">
+            <div class="row" style="position:fixed;">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="text-center">
+                    Event Type
+                  </h5>
+                  <ul class="list-group">
+                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('music')">Music</a>
+                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('movie')">Movie</a>
+                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('work')">Work</a>
+                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('dancing')">Dancing</a>
+                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('movie')">Movie</a>
+                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('study')">Study</a>
+                  </ul>  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+              <div>            
 <!-- Modal Start-->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -176,43 +289,12 @@
     </div>
     <!-- Modal End -->             
                 </div>
-            </div>
-        </div>
-        <nav aria-label="Page navigation example">
-  <ul class="pagination">
-        <!-- Search mode -->
-        <li v-show="searchmode" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
-          <a class="page-link"  @click="search(pagination.prev_page_url)">
-            Previous 
-          </a>
-        </li>
-        <!-- Search mode End -->
-        <!-- Default Mode -->
-        <li v-show="!searchmode" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
-          <a class="page-link"  @click="loadEvents(pagination.prev_page_url)">
-            Previous main
-          </a>
-        </li>
-        <!-- Default Mode End-->
-        <li class="page-item disabled">
-          <a class="page-link text-dark">Page {{ pagination.current_page }} of {{ pagination.last_page }}
-          </a>
-        </li>
-        <li v-show="!searchmode" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
-          <a class="page-link" @click="loadEvents(pagination.next_page_url)">
-            Next main
-          </a>
-        </li>
-        <!--  Search mode   -->
-        <li v-show="searchmode" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
-          <a class="page-link" @click="search(pagination.next_page_url)">
-            Next
-          </a>
-        </li>
-        <!-- Search mode End -->
-  </ul>
-</nav>
+
+
+
+
     </div>
+    
 </template>
 <script>
 export default {
@@ -223,10 +305,15 @@ export default {
         startDate: "",
         endDate: ""
       },
+      showEventType: "",
+      eventTypeModel: false,
+      userLists: {},
       searchmode: false,
+      userPagination: {},
       pagination: {},
       InterestStatust: "Interested",
       goStatus: "Going",
+      peramData: "",
       editmode: false,
       events: {},
       form: new Form({
@@ -246,6 +333,47 @@ export default {
     };
   },
   methods: {
+    eventTypeData(peramData, page_url) {
+      if (this.showEventType.length < 2) {
+        this.showEventType = peramData;
+      }
+      if (peramData == null || peramData.length < 2) {
+      }
+      // peramData = this.showEventType;
+      this.eventTypeModel = true;
+      let vm = this;
+      var peram = page_url;
+      page_url = page_url || "api/eventWithType/" + peramData;
+      axios
+        .get(page_url)
+        .then(
+          ({ data }) => (
+            (this.events = data.data), vm.makePagination(data.meta, data.links)
+          )
+        );
+    },
+    loadUserList(page_url) {
+      let vm = this;
+      var peram = page_url;
+      page_url = page_url || "api/loadUserList";
+      axios
+        .get(page_url)
+        .then(
+          ({ data }) => (
+            (this.userLists = data.data),
+            vm.makeUserPagination(data.meta, data.links)
+          )
+        );
+    },
+    makeUserPagination(meta, links) {
+      let userPagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev
+      };
+      this.userPagination = userPagination;
+    },
     loadEvents(page_url) {
       let vm = this;
       var peram = page_url;
@@ -271,6 +399,7 @@ export default {
       this.searchmode = true;
       let vm = this;
       var peram = page_url;
+      console.log("page_url :" + page_url);
       page_url = page_url || "http://127.0.0.1:8000/api/search";
       if (
         this.searchQuery.searchText.length > 0 ||
@@ -283,7 +412,7 @@ export default {
           })
           .then(response => {
             this.events = response.data.data;
-            this.searchQuery.searchText = "";
+            // this.searchQuery.searchText = "";
             this.pagination = [];
             vm.makePagination(response.data.meta, response.data.links);
           })
@@ -416,6 +545,7 @@ export default {
   created() {
     this.$Progress.start();
     this.loadEvents();
+    this.loadUserList();
     this.$Progress.finish();
   }
 };

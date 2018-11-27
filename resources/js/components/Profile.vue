@@ -37,9 +37,20 @@
                                             {{user.following}}
                                         </a>
                                         </div>
-                                       
                                     </div>
-                                    <br><br>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                           <p><span style="font-weight: bold;">Profile Type :</span> 
+                                           <a v-if="$gate.userId()==user.id" class="btn" style="background: #d7f4e0;" @click="profileTypeUpdate">
+                                             {{user.profileType}}</a>
+                                             <span v-if="$gate.userId()!=user.id" style="font-family: inherit;font-weight: bold;">
+                                               {{user.profileType}}
+                                               </span>
+                                           </p>
+                                        </div>
+                                    </div>
+                                    <br>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -295,6 +306,11 @@ export default {
     };
   },
   methods: {
+    profileTypeUpdate() {
+      axios
+        .get("http://127.0.0.1:8000/api/profileType")
+        .then(({ data }) => (this.user.profileType = data));
+    },
     DeleteInterest(id) {
       swal({
         title: "Are you sure?",

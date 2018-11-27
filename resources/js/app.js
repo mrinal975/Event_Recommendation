@@ -91,8 +91,8 @@ Vue.filter("EventDate", function(eventStartDate) {
     return moment(eventStartDate).format("Do");
 });
 Vue.filter("Des", function(eventDescription) {
-    return eventDescription.length > 39
-        ? eventDescription.substr(0, 40)
+    return eventDescription.length > 34
+        ? eventDescription.substr(0, 35)
         : eventDescription;
 });
 

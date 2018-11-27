@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body style="background:#dde8f6">
 <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a href="/" class="navbar-brand">Event Recomender System</a>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Event\EventCollection;
+use App\Http\Resources\Profile\UserListCollection;
 use App\Http\Resources\Event\EventResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Event\EventRequest;
@@ -38,7 +39,7 @@ class EventController extends Controller
         $count=0;
         $userId=Auth::user('api')->id;
         //fetching if your have gone on some event
-        $datas=User::find($userId)->events()->wherePivotIn('Interest_type',[1,2])->latest()->paginate(3);
+        $datas=User::find($userId)->events()->wherePivotIn('Interest_type',[1,2])->latest()->paginate(5);
         if(!empty($datas) && $datas!=null){
             foreach ($datas as $data) {
                 $interst[]=$data->eventType;
@@ -48,7 +49,7 @@ class EventController extends Controller
             //fetching three interested thing
             //return $count;
         if($count==0){ 
-            $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(3);
+            $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(5);
             if($userInterest){
                 foreach ($userInterest as $data) {
                     $interst[]=$data->Interest_on;
@@ -153,5 +154,16 @@ class EventController extends Controller
     public function eventshow($id){
         $event=Event::findOrFail($id);
         return $event;
+    }
+    public function userList(){
+        $userId=Auth::user('api')->id;
+        $User=User::where('status','=','0')->where('id','!=',$userId)->latest()->paginate(5);
+        return UserListCollection::collection($User);
+    }
+    public function eventWithType($data){
+        $dateToday=date('Y-m-d');
+         $eventData=Event::where('eventType','=',$data)
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+        return EventCollection::collection($eventData);
     }
 }
