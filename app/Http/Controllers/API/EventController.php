@@ -38,45 +38,59 @@ class EventController extends Controller
         $dateToday=date('Y-m-d');
         $count=0;
         $userId=Auth::user('api')->id;
-        //fetching if your have gone on some event
-        $datas=User::find($userId)->events()->wherePivotIn('Interest_type',[1,2])->latest()->paginate(5);
+        $eventData=[];
+        //fetching if your have gone on event
+        $datas=User::find($userId)->events()->wherePivotIn('Interest_type',[1,2])->latest()->paginate(3);
         if(!empty($datas) && $datas!=null){
             foreach ($datas as $data) {
                 $interst[]=$data->eventType;
                 $count++;
                 }           
             }
-            //fetching three interested thing
-            //return $count;
-        if($count==0){ 
             $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(5);
             if($userInterest){
                 foreach ($userInterest as $data) {
                     $interst[]=$data->Interest_on;
                     $count++;
-                }if($count==0){
-                    //user created event from next days
-                    $eventData=Event::where('eventStartDate','>=',$dateToday)
-                    ->where('createdBy','=',$userId)
-                    ->latest()->paginate(5);
                 }
-            } 
-            //return 1;   
-        }
-        //checking data range
-        if($count==2){
-             $eventData=Event::whereIn('eventType',[$interst[0],$interst[1]])
-                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+            }
+        if($count==0){
+            $eventData=Event::whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
         }
         elseif($count==1){
-             $eventData=Event::whereIn('eventType',[$interst[0]])
+            $eventData=Event::whereIn('eventType',[$interst[0]])
                     ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
-                    
+        }
+        elseif($count==2){
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1]])
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
         }
         elseif($count==3){
-             $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2]])
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2]])
                     ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
         }
+        elseif($count==4){
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2],$interst[3]])
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+        }
+        elseif($count==5){
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2],$interst[3],$interst[4]])
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+        }
+        elseif($count==6){
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2],$interst[3],$interst[4],$interst[5]])
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+        }
+        elseif($count==7){
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2],$interst[3],$interst[4],$interst[5],$interst[6]])
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+        }
+        elseif($count==8){
+            $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2],$interst[3],$interst[4],$interst[5],$interst[6],$interst[7]])
+                    ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
+        }
+
+        // return $eventData;
         return EventCollection::collection($eventData);
     }
 

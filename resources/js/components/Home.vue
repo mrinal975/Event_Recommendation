@@ -90,7 +90,7 @@
               <router-link  v-bind:to="'event/'+event.id">
 							<h4 class="title">{{event.eventName |upText}}</h4>
               </router-link>
-              <p class="desc ">Type : {{event.eventType}}</p>             
+              <p class="desc ">Type : {{event.eventType | upText}}</p>             
 							<p class="desc">{{event.eventDescription | upText | Des}}</p>
                
 							<ul>
@@ -339,8 +339,8 @@ export default {
       }
       if (peramData == null || peramData.length < 2) {
       }
-      // peramData = this.showEventType;
       this.eventTypeModel = true;
+      this.searchmode = false;
       let vm = this;
       var peram = page_url;
       page_url = page_url || "api/eventWithType/" + peramData;

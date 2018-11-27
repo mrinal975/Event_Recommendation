@@ -72683,8 +72683,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.showEventType = peramData;
       }
       if (peramData == null || peramData.length < 2) {}
-      // peramData = this.showEventType;
       this.eventTypeModel = true;
+      this.searchmode = false;
       var vm = this;
       var peram = page_url;
       page_url = page_url || "api/eventWithType/" + peramData;
@@ -73171,7 +73171,10 @@ var render = function() {
                           ),
                           _vm._v(" "),
                           _c("p", { staticClass: "desc " }, [
-                            _vm._v("Type : " + _vm._s(event.eventType))
+                            _vm._v(
+                              "Type : " +
+                                _vm._s(_vm._f("upText")(event.eventType))
+                            )
                           ]),
                           _vm._v(" "),
                           _c("p", { staticClass: "desc" }, [
