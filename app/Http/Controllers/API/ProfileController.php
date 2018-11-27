@@ -9,6 +9,7 @@ use DB;
 use Auth;
 use Image;
 use App\User;
+use App\Friend;
 use App\UserInterest;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Interest\InterestCollection;
@@ -161,8 +162,18 @@ class ProfileController extends Controller
         }
         $interest->update($request->all());
     }
+
     public function profilePicture(Request $request, $id){
         
     }
+    public function interestDelete($id){
+        $event=UserInterest::findOrFail($id);
+        $event->delete();
+        return ['message'=>'delete request'];
+    }
+    public function totalFollowers($id){
+        return count(Friend::where('whom','=',$id)->get());
+    }
+    
     
 }

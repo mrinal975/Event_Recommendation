@@ -16,7 +16,7 @@
                         <div class="profile-head">
                             <br><br>
                                     <h4>
-                                        {{user.name | ememptyStringpty}}
+                                        {{user.name }}
                                     </h4>
                                     <br>
                                     <button class="btn btn-info" v-if="$gate.userId()!=user.id" @click="followOrNotProfile()">
@@ -96,7 +96,8 @@
         <td>{{interest.Interest_on}}</td>
         <td></td>
         <td v-if="$gate.userId()==interest.user_id">
-            <button @click="EditInterest(interest)" >Edit</button>
+            <button @click="EditInterest(interest)" style="background: #c6ffff;"><i class="fas fa-edit" title="Edit Event"></i></button>
+            <button @click="DeleteInterest(interest.id)"  style="background: #ffb3b3;"><i class="fas fa-trash" title="Delete Event"></i></button>
             </td>
       </tr>
     </tbody>
@@ -120,7 +121,7 @@
                                         <label>Name</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.name |emptyString}}</p>
+                                        <p>{{user.name }}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -128,7 +129,7 @@
                                         <label>Email</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.email | emptyString}}</p>
+                                        <p>{{user.email }}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -136,7 +137,7 @@
                                         <label>Phone</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.phone | emptyString}}</p>
+                                        <p>{{user.phone }}</p>
                                     </div>
                                 </div> 
                             </div>
@@ -294,6 +295,32 @@ export default {
     };
   },
   methods: {
+    DeleteInterest(id) {
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        //send request for delete
+        if (result.value) {
+          this.form
+            .delete("api/interestDelete/" + id)
+            .then(() => {
+              if (result.value) {
+                swal("Deleted!", "Your file has been deleted.", "success");
+              }
+              this.loadInterestOn();
+            })
+            .catch(() => {
+              swal("Failed!", "There was something wrong.", "warning");
+            });
+        }
+      });
+    },
     showModelImage(profileImage) {
       if (profileImage == "profile.png") {
         return "img/" + profileImage;
@@ -319,7 +346,12 @@ export default {
     followOrNotProfile() {
       axios
         .get("http://127.0.0.1:8000/api/follow/" + this.id)
-        .then(({ data }) => (this.followOrNot = data));
+        .then(({ data }) => ((this.followOrNot = data), this.totalFollowers()));
+    },
+    totalFollowers() {
+      axios
+        .get("http://127.0.0.1:8000/api/totalFollowers/" + this.id)
+        .then(({ data }) => (this.user.followers = data));
     },
     followStaus() {
       axios
@@ -358,7 +390,7 @@ export default {
           type: "error",
           title: "Oops...",
           text: "Only Image can be upload",
-          footer: "<a href>Erroe ! </a>"
+          footer: "<a href>Error ! </a>"
         });
       } else if (file["size"] > limit) {
         swal({

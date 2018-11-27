@@ -226,7 +226,6 @@ export default {
     loadScheduler(page_url) {
       let vm = this;
       var peram = page_url;
-      console.log("peram : " + peram);
       page_url = page_url || "api/schedule";
       axios
         .get(page_url)

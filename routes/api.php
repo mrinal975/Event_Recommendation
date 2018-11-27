@@ -10,6 +10,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('event','API\EventController');
 Route::apiResource('Profile','API\ProfileController');
 Route::get('interest/{id}', 'API\ProfileController@interestShow');
+Route::delete('interestDelete/{id}', 'API\ProfileController@interestDelete');
 Route::post('personalInterest', 'API\ProfileController@interestStore');
 Route::put('InterestUpdate/{id}', 'API\ProfileController@interestUpdate');
 Route::get('follow/{id}', 'API\FriendController@followOrNot');
@@ -21,6 +22,9 @@ Route::get('totalGoing/{id}', 'API\InterestedOnEventController@totalgoing');
 Route::get('totalInterested/{id}', 'API\InterestedOnEventController@totalinterested');
 Route::post('search', 'API\SearchController@search');
 
+//Total following or followers
+Route::get('totalFollwing/{id}', 'API\ProfileController@totalFollwing');
+Route::get('totalFollowers/{id}', 'API\ProfileController@totalFollowers');
 
 // Schedule Route
 Route::apiResource('schedule','API\SchedulerController');

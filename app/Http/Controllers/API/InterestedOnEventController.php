@@ -128,7 +128,7 @@ class InterestedOnEventController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 
 }

@@ -72522,6 +72522,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -72531,6 +72565,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         startDate: "",
         endDate: ""
       },
+      searchmode: false,
+      pagination: {},
       InterestStatust: "Interested",
       goStatus: "Going",
       editmode: false,
@@ -72553,40 +72589,66 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
-    search: function search() {
+    loadEvents: function loadEvents(page_url) {
       var _this = this;
 
+      var vm = this;
+      var peram = page_url;
+      page_url = page_url || "api/event";
+      axios.get(page_url).then(function (_ref) {
+        var data = _ref.data;
+        return _this.events = data.data, vm.makePagination(data.meta, data.links);
+      });
+    },
+    makePagination: function makePagination(meta, links) {
+      var pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev
+      };
+      this.pagination = pagination;
+    },
+    search: function search(page_url) {
+      var _this2 = this;
+
+      this.searchmode = true;
+      var vm = this;
+      var peram = page_url;
+      page_url = page_url || "http://127.0.0.1:8000/api/search";
       if (this.searchQuery.searchText.length > 0 || this.searchQuery.startDate.length > 0 || this.searchQuery.endDate.length > 0) {
-        axios.post("http://127.0.0.1:8000/api/search ", {
+        axios.post(page_url, {
           body: this.searchQuery
         }).then(function (response) {
-          _this.events = response.data.data;
-          _this.searchQuery.searchText = "";
+          _this2.events = response.data.data;
+          _this2.searchQuery.searchText = "";
+          _this2.pagination = [];
+          vm.makePagination(response.data.meta, response.data.links);
         }).catch(function (e) {});
       }
     },
     goingOrNot: function goingOrNot(index, eventid) {
-      var _this2 = this;
+      var _this3 = this;
 
-      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref) {
-        var data = _ref.data;
-        return _this2.events[index]["goingstatus"] = data;
-      });
-      axios.get("http://127.0.0.1:8000/api/totalGoing/" + eventid).then(function (_ref2) {
+      axios.get("http://127.0.0.1:8000/api/goingupdate/" + eventid).then(function (_ref2) {
         var data = _ref2.data;
-        return _this2.events[index]["totalGoing"] = data;
+        return _this3.events[index]["goingstatus"] = data;
+      });
+      axios.get("http://127.0.0.1:8000/api/totalGoing/" + eventid).then(function (_ref3) {
+        var data = _ref3.data;
+        return _this3.events[index]["totalGoing"] = data;
       });
     },
     InterestedOrNot: function InterestedOrNot(index, eventid) {
-      var _this3 = this;
+      var _this4 = this;
 
-      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref3) {
-        var data = _ref3.data;
-        return _this3.events[index]["intereststatus"] = data;
-      });
-      axios.get("http://127.0.0.1:8000/api/totalInterested/" + eventid).then(function (_ref4) {
+      axios.get("http://127.0.0.1:8000/api/insterestupdate/" + eventid).then(function (_ref4) {
         var data = _ref4.data;
-        return _this3.events[index]["totalInterested"] = data;
+        return _this4.events[index]["intereststatus"] = data;
+      });
+      axios.get("http://127.0.0.1:8000/api/totalInterested/" + eventid).then(function (_ref5) {
+        var data = _ref5.data;
+        return _this4.events[index]["totalInterested"] = data;
       });
     },
     showEventImage: function showEventImage(eventImage) {
@@ -72598,7 +72660,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       return Image;
     },
     eventPicture: function eventPicture(e) {
-      var _this4 = this;
+      var _this5 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -72621,25 +72683,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
 
       reader.onloadend = function (file) {
-        _this4.form.eventImage = reader.result;
+        _this5.form.eventImage = reader.result;
       };
       reader.readAsDataURL(file);
     },
     updateEvent: function updateEvent() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.form.put("api/event/" + this.form.id).then(function () {
         //success
-        _this5.$Progress.start();
-        _this5.loadEvents();
+        _this6.$Progress.start();
+        _this6.loadEvents();
         $("#exampleModal").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
-        _this5.$Progress.finish();
-        _this5.editmode = false;
+        _this6.$Progress.finish();
       }).catch(function () {
         //error
         swal("Fail!", "updated failed", "warning");
-        _this5.$Progress.fail();
+        _this6.$Progress.fail();
       });
     },
     cancelEdit: function cancelEdit() {
@@ -72653,14 +72714,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.editmode = true;
       $("#exampleModal").modal("show");
       this.form.fill(event);
-    },
-    loadEvents: function loadEvents() {
-      var _this6 = this;
-
-      axios.get("api/event").then(function (_ref5) {
-        var data = _ref5.data;
-        return _this6.events = data.data;
-      });
     },
     deleteEvent: function deleteEvent(id) {
       var _this7 = this;
@@ -73674,6 +73727,142 @@ var render = function() {
           )
         ])
       ])
+    ]),
+    _vm._v(" "),
+    _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+      _c("ul", { staticClass: "pagination" }, [
+        _c(
+          "li",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.searchmode,
+                expression: "searchmode"
+              }
+            ],
+            staticClass: "page-item",
+            class: [{ disabled: !_vm.pagination.prev_page_url }]
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                on: {
+                  click: function($event) {
+                    _vm.search(_vm.pagination.prev_page_url)
+                  }
+                }
+              },
+              [_vm._v("\n            Previous \n          ")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.searchmode,
+                expression: "!searchmode"
+              }
+            ],
+            staticClass: "page-item",
+            class: [{ disabled: !_vm.pagination.prev_page_url }]
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                on: {
+                  click: function($event) {
+                    _vm.loadEvents(_vm.pagination.prev_page_url)
+                  }
+                }
+              },
+              [_vm._v("\n            Previous main\n          ")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item disabled" }, [
+          _c("a", { staticClass: "page-link text-dark" }, [
+            _vm._v(
+              "Page " +
+                _vm._s(_vm.pagination.current_page) +
+                " of " +
+                _vm._s(_vm.pagination.last_page) +
+                "\n          "
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.searchmode,
+                expression: "!searchmode"
+              }
+            ],
+            staticClass: "page-item",
+            class: [{ disabled: !_vm.pagination.next_page_url }]
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                on: {
+                  click: function($event) {
+                    _vm.loadEvents(_vm.pagination.next_page_url)
+                  }
+                }
+              },
+              [_vm._v("\n            Next main\n          ")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.searchmode,
+                expression: "searchmode"
+              }
+            ],
+            staticClass: "page-item",
+            class: [{ disabled: !_vm.pagination.next_page_url }]
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                on: {
+                  click: function($event) {
+                    _vm.search(_vm.pagination.next_page_url)
+                  }
+                }
+              },
+              [_vm._v("\n            Next\n          ")]
+            )
+          ]
+        )
+      ])
     ])
   ])
 }
@@ -73973,7 +74162,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       var vm = this;
       var peram = page_url;
-      console.log("peram : " + peram);
       page_url = page_url || "api/schedule";
       axios.get(page_url).then(function (_ref2) {
         var data = _ref2.data;
@@ -75439,6 +75627,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -75475,6 +75664,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
+    DeleteInterest: function DeleteInterest(id) {
+      var _this = this;
+
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        //send request for delete
+        if (result.value) {
+          _this.form.delete("api/interestDelete/" + id).then(function () {
+            if (result.value) {
+              swal("Deleted!", "Your file has been deleted.", "success");
+            }
+            _this.loadInterestOn();
+          }).catch(function () {
+            swal("Failed!", "There was something wrong.", "warning");
+          });
+        }
+      });
+    },
     showModelImage: function showModelImage(profileImage) {
       if (profileImage == "profile.png") {
         return "img/" + profileImage;
@@ -75484,39 +75698,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     followers: function followers() {
-      var _this = this;
+      var _this2 = this;
 
       this.followmodel = false;
       $("#followemyModal").modal("show");
       axios.get("http://127.0.0.1:8000/api/followers/" + this.id).then(function (_ref) {
         var data = _ref.data;
-        return _this.follows = data.data;
+        return _this2.follows = data.data;
       });
     },
     following: function following() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.followmodel = true;
       $("#followemyModal").modal("show");
       axios.get("http://127.0.0.1:8000/api/following/" + this.id).then(function (_ref2) {
         var data = _ref2.data;
-        return _this2.follows = data.data;
+        return _this3.follows = data.data;
       });
     },
     followOrNotProfile: function followOrNotProfile() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get("http://127.0.0.1:8000/api/follow/" + this.id).then(function (_ref3) {
         var data = _ref3.data;
-        return _this3.followOrNot = data;
+        return _this4.followOrNot = data, _this4.totalFollowers();
+      });
+    },
+    totalFollowers: function totalFollowers() {
+      var _this5 = this;
+
+      axios.get("http://127.0.0.1:8000/api/totalFollowers/" + this.id).then(function (_ref4) {
+        var data = _ref4.data;
+        return _this5.user.followers = data;
       });
     },
     followStaus: function followStaus() {
-      var _this4 = this;
+      var _this6 = this;
 
-      axios.get("http://127.0.0.1:8000/api/followStaus/" + this.id).then(function (_ref4) {
-        var data = _ref4.data;
-        return _this4.followOrNot = data;
+      axios.get("http://127.0.0.1:8000/api/followStaus/" + this.id).then(function (_ref5) {
+        var data = _ref5.data;
+        return _this6.followOrNot = data;
       });
     },
     showProfileImage: function showProfileImage(profileImage) {
@@ -75536,7 +75758,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     ProfilePicture: function ProfilePicture(e) {
-      var _this5 = this;
+      var _this7 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -75547,7 +75769,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           type: "error",
           title: "Oops...",
           text: "Only Image can be upload",
-          footer: "<a href>Erroe ! </a>"
+          footer: "<a href>Error ! </a>"
         });
       } else if (file["size"] > limit) {
         swal({
@@ -75559,7 +75781,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
 
       reader.onloadend = function (file) {
-        _this5.profile.image = reader.result;
+        _this7.profile.image = reader.result;
       };
       reader.readAsDataURL(file);
     },
@@ -75572,36 +75794,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(data);
     },
     updateInterst: function updateInterst() {
-      var _this6 = this;
+      var _this8 = this;
 
-      this.form.put("api/InterestUpdate/" + this.form.id).then(function (_ref5) {
-        var data = _ref5.data;
+      this.form.put("api/InterestUpdate/" + this.form.id).then(function (_ref6) {
+        var data = _ref6.data;
 
-        _this6.loadInterestOn();
+        _this8.loadInterestOn();
         toast({
           type: "success",
           title: "Updated successfully"
         });
         $("#Profile_Test_Model").modal("hide");
       }).catch(function (e) {
-        _this6.errorInterest = "Interst type alreasy exist chose different one";
+        _this8.errorInterest = "Interst type alreasy exist chose different one";
       });
     },
     addInterst: function addInterst() {
-      var _this7 = this;
+      var _this9 = this;
 
-      this.form.post("http://127.0.0.1:8000/api/personalInterest").then(function (_ref6) {
-        var data = _ref6.data;
+      this.form.post("http://127.0.0.1:8000/api/personalInterest").then(function (_ref7) {
+        var data = _ref7.data;
 
-        _this7.loadInterestOn();
+        _this9.loadInterestOn();
         toast({
           type: "success",
           title: "created successfully"
         });
-        _this7.$Progress.finish();
+        _this9.$Progress.finish();
         $("#Profile_Test_Model").modal("hide");
       }).catch(function (e) {
-        _this7.errorInterest = "Interst type alreasy exist chose different one";
+        _this9.errorInterest = "Interst type alreasy exist chose different one";
       });
     },
     AddInerestModel: function AddInerestModel() {
@@ -75613,34 +75835,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.fill(profile);
     },
     loadInterestOn: function loadInterestOn() {
-      var _this8 = this;
+      var _this10 = this;
 
-      axios.get("http://127.0.0.1:8000/api/interest/" + this.id).then(function (_ref7) {
-        var data = _ref7.data;
-        return _this8.interests = data.data;
+      axios.get("http://127.0.0.1:8000/api/interest/" + this.id).then(function (_ref8) {
+        var data = _ref8.data;
+        return _this10.interests = data.data;
       });
     },
     loadUserInfo: function loadUserInfo() {
-      var _this9 = this;
+      var _this11 = this;
 
-      axios.get("http://127.0.0.1:8000/api/Profile/" + this.id).then(function (_ref8) {
-        var data = _ref8.data;
-        return _this9.user = data.data, _this9.profile = data.data;
+      axios.get("http://127.0.0.1:8000/api/Profile/" + this.id).then(function (_ref9) {
+        var data = _ref9.data;
+        return _this11.user = data.data, _this11.profile = data.data;
       });
     },
     updateinformation: function updateinformation() {
-      var _this10 = this;
+      var _this12 = this;
 
       axios.post("http://127.0.0.1:8000/api/Profile ", {
         body: this.profile
       }).then(function (response) {
-        _this10.$Progress.start();
-        _this10.loadUserInfo();
+        _this12.$Progress.start();
+        _this12.loadUserInfo();
         $("#Profile_Model").modal("hide");
         swal("Updated!", "Information has been updated.", "success");
-        _this10.$Progress.finish();
+        _this12.$Progress.finish();
       }).catch(function (e) {
-        _this10.errors = "Name And email field is required";
+        _this12.errors = "Name And email field is required";
       });
     }
   },
@@ -75686,9 +75908,7 @@ var render = function() {
                         _c("h4", [
                           _vm._v(
                             "\n                                      " +
-                              _vm._s(
-                                _vm._f("ememptyStringpty")(_vm.user.name)
-                              ) +
+                              _vm._s(_vm.user.name) +
                               "\n                                  "
                           )
                         ]),
@@ -75889,13 +76109,41 @@ var render = function() {
                                         _c(
                                           "button",
                                           {
+                                            staticStyle: {
+                                              background: "#c6ffff"
+                                            },
                                             on: {
                                               click: function($event) {
                                                 _vm.EditInterest(interest)
                                               }
                                             }
                                           },
-                                          [_vm._v("Edit")]
+                                          [
+                                            _c("i", {
+                                              staticClass: "fas fa-edit",
+                                              attrs: { title: "Edit Event" }
+                                            })
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "button",
+                                          {
+                                            staticStyle: {
+                                              background: "#ffb3b3"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.DeleteInterest(interest.id)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "fas fa-trash",
+                                              attrs: { title: "Delete Event" }
+                                            })
+                                          ]
                                         )
                                       ])
                                     : _vm._e()
@@ -75960,13 +76208,7 @@ var render = function() {
                                 _vm._m(2),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
-                                  _c("p", [
-                                    _vm._v(
-                                      _vm._s(
-                                        _vm._f("emptyString")(_vm.user.name)
-                                      )
-                                    )
-                                  ])
+                                  _c("p", [_vm._v(_vm._s(_vm.user.name))])
                                 ])
                               ]),
                               _vm._v(" "),
@@ -75974,13 +76216,7 @@ var render = function() {
                                 _vm._m(3),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
-                                  _c("p", [
-                                    _vm._v(
-                                      _vm._s(
-                                        _vm._f("emptyString")(_vm.user.email)
-                                      )
-                                    )
-                                  ])
+                                  _c("p", [_vm._v(_vm._s(_vm.user.email))])
                                 ])
                               ]),
                               _vm._v(" "),
@@ -75988,13 +76224,7 @@ var render = function() {
                                 _vm._m(4),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
-                                  _c("p", [
-                                    _vm._v(
-                                      _vm._s(
-                                        _vm._f("emptyString")(_vm.user.phone)
-                                      )
-                                    )
-                                  ])
+                                  _c("p", [_vm._v(_vm._s(_vm.user.phone))])
                                 ])
                               ])
                             ]

@@ -178,6 +178,40 @@
                 </div>
             </div>
         </div>
+        <nav aria-label="Page navigation example">
+  <ul class="pagination">
+        <!-- Search mode -->
+        <li v-show="searchmode" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
+          <a class="page-link"  @click="search(pagination.prev_page_url)">
+            Previous 
+          </a>
+        </li>
+        <!-- Search mode End -->
+        <!-- Default Mode -->
+        <li v-show="!searchmode" v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
+          <a class="page-link"  @click="loadEvents(pagination.prev_page_url)">
+            Previous main
+          </a>
+        </li>
+        <!-- Default Mode End-->
+        <li class="page-item disabled">
+          <a class="page-link text-dark">Page {{ pagination.current_page }} of {{ pagination.last_page }}
+          </a>
+        </li>
+        <li v-show="!searchmode" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
+          <a class="page-link" @click="loadEvents(pagination.next_page_url)">
+            Next main
+          </a>
+        </li>
+        <!--  Search mode   -->
+        <li v-show="searchmode" v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
+          <a class="page-link" @click="search(pagination.next_page_url)">
+            Next
+          </a>
+        </li>
+        <!-- Search mode End -->
+  </ul>
+</nav>
     </div>
 </template>
 <script>
@@ -189,6 +223,8 @@ export default {
         startDate: "",
         endDate: ""
       },
+      searchmode: false,
+      pagination: {},
       InterestStatust: "Interested",
       goStatus: "Going",
       editmode: false,
@@ -210,19 +246,46 @@ export default {
     };
   },
   methods: {
-    search() {
+    loadEvents(page_url) {
+      let vm = this;
+      var peram = page_url;
+      page_url = page_url || "api/event";
+      axios
+        .get(page_url)
+        .then(
+          ({ data }) => (
+            (this.events = data.data), vm.makePagination(data.meta, data.links)
+          )
+        );
+    },
+    makePagination(meta, links) {
+      let pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev
+      };
+      this.pagination = pagination;
+    },
+    search(page_url) {
+      this.searchmode = true;
+      let vm = this;
+      var peram = page_url;
+      page_url = page_url || "http://127.0.0.1:8000/api/search";
       if (
         this.searchQuery.searchText.length > 0 ||
         this.searchQuery.startDate.length > 0 ||
         this.searchQuery.endDate.length > 0
       ) {
         axios
-          .post(`http://127.0.0.1:8000/api/search `, {
+          .post(page_url, {
             body: this.searchQuery
           })
           .then(response => {
             this.events = response.data.data;
             this.searchQuery.searchText = "";
+            this.pagination = [];
+            vm.makePagination(response.data.meta, response.data.links);
           })
           .catch(e => {});
       }
@@ -290,7 +353,6 @@ export default {
           $("#exampleModal").modal("hide");
           swal("Updated!", "Information has been updated.", "success");
           this.$Progress.finish();
-          this.editmode = false;
         })
         .catch(() => {
           //error
@@ -310,9 +372,7 @@ export default {
       $("#exampleModal").modal("show");
       this.form.fill(event);
     },
-    loadEvents() {
-      axios.get("api/event").then(({ data }) => (this.events = data.data));
-    },
+
     deleteEvent(id) {
       swal({
         title: "Are you sure?",

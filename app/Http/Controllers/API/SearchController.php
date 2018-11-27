@@ -41,6 +41,7 @@ class SearchController extends Controller
                                 ->join('interested_on_events','events.id','=','interested_on_events.event_id')
                                 ->select('events.*')
                                 ->where('interested_on_events.user_id','=',$SecondUser->id)
+                                ->whereIn('interested_on_events.Interest_type',['1','2'])
                                 ->get();
                     }
                 } 
@@ -48,9 +49,9 @@ class SearchController extends Controller
         }
         else{
             if(empty($endDate)){
-                $resultData=Event::where('eventStartDate','>=',$startDate)->get();
+                $resultData=Event::where('eventStartDate','>=',$startDate)->latest()->paginate(5);
             }else{
-                $resultData=Event::whereBetween('eventStartDate','>=',array($startDate,$endDate))->get();
+                $resultData=Event::whereBetween('eventStartDate',array($startDate,$endDate))->latest()->paginate(5);
             }
            
         }
@@ -66,15 +67,15 @@ class SearchController extends Controller
         $eventName =Event::where('eventStartDate','>=',$date)
                     ->where('eventName','LIKE', '%' . $search . '%')
 				    ->orderBy('id','DESC')
-                    ->get();
+                    ->latest()->paginate(5);
         $eventPlace= Event::where('eventStartDate','>=',$date)
                     ->where('eventPlace','LIKE', '%' . $search . '%')
 				    ->orderBy('id','DESC')
-                    ->get();
+                    ->latest()->paginate(5);
         $eventType= Event::where('eventStartDate','>=',$date)
                     ->where('eventType','LIKE', '%' . $search . '%')
 				    ->orderBy('id','DESC')
-                     ->get();
+                     ->latest()->paginate(5);
         return self::eventCondition($eventName,$eventPlace,$eventType);
     }
     public function eventCondition($eventName,$eventPlace,$eventType){
