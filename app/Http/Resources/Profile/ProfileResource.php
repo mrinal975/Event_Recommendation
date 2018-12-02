@@ -22,8 +22,10 @@ class ProfileResource extends JsonResource
             'phone'=>$this->phone,
             'image'=>$this->image,
             'profileType'=> $this->status==0 ? 'Public':'Private',
-            'following'=>count(Friend::where('hwo','=',$this->id)->get()),
-            'followers'=>count(Friend::where('whom','=',$this->id)->get()),
+            'following'=>count(Friend::where('hwo','=',$this->id)
+                                    ->where('whom','!=','0')->get()),
+            'followers'=>count(Friend::where('whom','=',$this->id)
+                                        ->where('hwo','!=','0')->get()),
         ];
     }
 }

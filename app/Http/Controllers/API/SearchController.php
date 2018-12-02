@@ -42,7 +42,10 @@ class SearchController extends Controller
             $resultData=self::eventSearch($search,$date);
         }
         if(count($resultData)==0){
-            $SecondUser=User::where('name','LIKE', '%' . $search . '%')->first();
+            $resultData=self::SearchWithFriendName($search,$userId);
+        } 
+        if(count($resultData)==0){
+            $SecondUser=User::where('email','LIKE', '%' . $search . '%')->first();
             if(count( $SecondUser)!=0)
             {
             $friend=Friend::where('hwo', $userId)->where('whom', $SecondUser->id)->first();
@@ -57,8 +60,30 @@ class SearchController extends Controller
             }
             } 
 
+        }
+        if(count($resultData)>0){
+            return  EventCollection::collection($resultData); 
         }  
-    return  EventCollection::collection($resultData); 
+        else{
+            return 'Not Found';
+        }
+    }
+    public function SearchWithFriendName($search,$userId){
+        $SecondUser=User::where('name','LIKE', '%' . $search . '%')->first();
+            if(count( $SecondUser)!=0)
+            {
+            $friend=Friend::where('hwo', $userId)->where('whom', $SecondUser)->first();
+            // search With Friend name 
+            if(count( $friend)!=0){
+                $resultData= DB::table('events')
+                        ->join('interested_on_events','events.id','=','interested_on_events.event_id')
+                        ->select('events.*')
+                        ->where('interested_on_events.user_id','=',$SecondUser->id)
+                        ->whereIn('interested_on_events.Interest_type',['1','2'])
+                        ->get();
+            }
+        }
+
     }
     public function datecalculate(){
         $dateFrom = date('Y-m-d'); 

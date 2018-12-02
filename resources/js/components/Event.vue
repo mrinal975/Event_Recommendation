@@ -15,7 +15,7 @@
                                         {{event.eventName}}
                                         </h3>
                                         <router-link  v-bind:to="'/profile/'+event.createdBy">
-                                        <p class="text-center">{{event.creatorName}}</p>
+                                        <p class="text-center event_creator">{{event.creatorName}}</p>
                                         </router-link>
                                         <img class="card-img-top" height="260px;"  :src="showEventImage(event.eventImage)" alt="Card image" style="width:100%">
                                         <div class="card-body">
@@ -35,6 +35,7 @@
                                             </a>
                                         <p>Going : {{event.totalGoing}} </p>
                                         <p>Interested : {{event.totalInterested}}</p>
+                                        <hr>
                                         <p>{{event.eventDescription}}</p>
                                         </div>
                                     </div>
@@ -65,7 +66,7 @@ export default {
         .get("http://127.0.0.1:8000/api/goingupdate/" + eventid)
         .then(({ data }) => (this.event["goingstatus"] = data));
       axios
-        .get("http://127.0.0.1:8000/api/totalGoing/")
+        .get("http://127.0.0.1:8000/api/totalGoing/" + eventid)
         .then(({ data }) => (this.event["totalGoing"] = data));
     },
     interestcheck(eventid) {
@@ -73,7 +74,7 @@ export default {
         .get("http://127.0.0.1:8000/api/insterestupdate/" + eventid)
         .then(({ data }) => (this.event["intereststatus"] = data));
       axios
-        .get("http://127.0.0.1:8000/api/totalInterested/")
+        .get("http://127.0.0.1:8000/api/totalInterested/" + eventid)
         .then(({ data }) => (this.event["totalInterested"] = data));
     },
     showEventImage(Image) {

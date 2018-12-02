@@ -9,14 +9,14 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
-                            <img  alt="Profile Picture" :src="showProfileImage(user.image)">
+                            <img  alt="Profile Picture img-thumbnail" :src="showProfileImage(user.image)">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="profile-head">
                             <br><br>
                                     <h4>
-                                        {{user.name }}
+                                        {{user.name | upText}}
                                     </h4>
                                     <br>
                                     <button class="btn btn-info" v-if="$gate.userId()!=user.id" @click="followOrNotProfile()">
@@ -59,10 +59,6 @@
                         </div>
                     </div> 
                 </div>
-
-
-
-
   <!-- The following Modal -->
   <div class="modal fade" id="followemyModal">
     <div class="modal-dialog">
@@ -95,11 +91,11 @@
       </div>
     </div>
   </div>      
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="profile-work">
-                            <br>
-                           <h4>Interest list</h4>        
+          <div class="row">
+              <div class="col-md-4">
+                  <div class="profile-work">
+                      <br>
+               <h4 class="class_list_custom text-center">Interest list</h4>        
        <table class="table table-borderless democlass">
            
     <tbody>
@@ -129,15 +125,15 @@
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <label>Name</label>
+                                        <label>Name :</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{user.name }}</p>
+                                        <p>{{user.name | upText }}</p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <label>Email</label>
+                                        <label>Email :</label>
                                     </div>
                                     <div class="col-md-6">
                                         <p>{{user.email }}</p>
@@ -145,7 +141,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <label>Phone</label>
+                                        <label>Phone :</label>
                                     </div>
                                     <div class="col-md-6">
                                         <p>{{user.phone }}</p>
@@ -188,7 +184,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="name">Name</label>
+                <label for="name">Name </label>
                 <input type="text" class="form-control" id="name" v-model=profile.name aria-describedby="emailHelp" 
                 placeholder="Event Place" :class="{ 'is-invalid': form.errors.has('name') }">
                 <has-error class="interestError" :form="form" field="name"></has-error>

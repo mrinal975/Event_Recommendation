@@ -1,5 +1,5 @@
 .navbar-expand-lg {
-    background-color: #dbdfe3 !important;
+    background-color: #8d8fff !important;
 }
 .nav-item:hover {
     background: #a8c7c7;
@@ -8,8 +8,25 @@
     font-size: 16px;
     color: red;
 }
+.event_creator {
+}
+.event_creator :hover {
+    text-decoration: none;
+}
+.menu_left {
+    color: #098fff;
+}
+.class_list_custom {
+    background: #009175;
+    border-radius: 2px 15px 2px 15px;
+    padding: 4px 4px;
+    color: white;
+}
+.leftsidebar {
+    margin-left: 13px;
+}
 .classbg {
-    background: #cfe3e3;
+    background: #259d9d;
 }
 .addclass > tbody > tr > .edit {
     display: true;
@@ -37,7 +54,7 @@
     padding-top: 5px;
 }
 body {
-    /* background: -webkit-linear-gradient(left, #3931af, #00c6ff); */
+    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
 }
 .emp-profile {
     padding: 3%;

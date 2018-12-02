@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="background:#dde8f6">
+<body>
 <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a href="/" class="navbar-brand">Event Recomender System</a>
+        <a href="/" class="navbar-brand" style="color: white !important;">Event Recomender System</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         >
             <span class="navbar-toggler-icon"></span>
@@ -22,19 +22,18 @@
             </div>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <router-link class="nav-link" to="/">Home</router-link>
+                    <router-link class="nav-link" to="/" style="color: white !important;">Home</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/schedule" class="nav-link" >Schedule</router-link>
+                    <router-link to="/schedule" class="nav-link" style="color: white !important;">Schedule</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/dailyschedule" class="nav-link" >DailySchedule</router-link>
+                    <router-link to="/dailyschedule" class="nav-link" style="color: white !important;">DailySchedule</router-link>
                 </li>
-                
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                        <span><i class="fas fa-user"></i></span>
+                        <span style="color: white !important;"><i class="fas fa-user"></i></span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <router-link to="/profile/{{auth()->user()->id}}" class="dropdown-item" >Profile</router-link>
@@ -50,12 +49,11 @@
             </ul>
         </div>
     </nav>
-    <br>
-    <br>
-    <br>
+    <br><br><br>
+    <transition>
     <router-view></router-view>
     <vue-progress-bar></vue-progress-bar>
-
+    </transition>
 </div>
 @auth
 <script>

@@ -1,8 +1,11 @@
 <template>
+
     <div class="container classbg">
       <div class="row justify-content-center">
+        
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
+      <br>
       <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="Search events"  v-model="searchQuery.searchText">
       <div class="input-group-append">
@@ -23,9 +26,9 @@
           <div class="col-md-2">
             <!-- <br><br> -->
             <div class="row" style="position:fixed;">
-              <div class="card">
+              <div class="card leftsidebar">
                 <div class="card-body">
-                  <h5 class="text-center">User List</h5>
+                  <h5 class="text-center class_list_custom">User List</h5>
                   <div class="list-group">
                   <!-- <a href="#" class="list-group-item list-group-item-action active">
                     Cras justo odio
@@ -39,9 +42,9 @@
       <ul class="pagination">
    
         <!-- loadUserList pagination -->
-        <li  v-bind:class="[{disabled: !userPagination.prev_page_url}]" class="page-item">
+        <li  v-bind:class="[{disabled: !userPagination.prev_page_url}]" class="page-item ">
           <a class="page-link"  @click="loadUserList(userPagination.prev_page_url)">
-          <i class="fas fa-arrow-left"></i>
+          <i class="fas fa-arrow-left menu_left"></i>
           </a>
         </li>
         <!-- loadUserList pagination End-->
@@ -50,9 +53,9 @@
           </a>
         </li>
         <!--  loadUserList pagination   -->
-        <li  v-bind:class="[{disabled: !userPagination.next_page_url}]" class="page-item">
+        <li  v-bind:class="[{disabled: !userPagination.next_page_url}]" class="page-item ">
           <a class="page-link" @click="loadUserList(userPagination.next_page_url)">
-           <i class="fas fa-arrow-right"></i> 
+           <i class="fas fa-arrow-right menu_left"></i> 
           </a>
         </li>
         
@@ -88,7 +91,7 @@
 						<img alt="Event Image" :src="showEventImage(event.eventImage)" />
 						<div class="info">
               <router-link  v-bind:to="'event/'+event.id">
-							<h4 class="title">{{event.eventName |upText}}</h4>
+							<h5 class="title" style="text-decoration:none">{{event.eventName |upText}}</h5>
               </router-link>
               <p class="desc ">Type : {{event.eventType | upText}}</p>             
 							<p class="desc">{{event.eventDescription | upText | Des}}</p>
@@ -177,16 +180,16 @@
             <div class="row" style="position:fixed;">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="text-center">
+                  <h5 class="text-center class_list_custom">
                     Event Type
                   </h5>
                   <ul class="list-group">
-                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('music')">Music</a>
-                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('movie')">Movie</a>
-                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('work')">Work</a>
-                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('dancing')">Dancing</a>
-                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('movie')">Movie</a>
-                    <a class="list-group-item" style="cursor:pointer" @click="eventTypeData('study')">Study</a>
+                    <a class="list-group-item list-group-item-action" style="cursor:pointer" @click="eventTypeData('music')">Music</a>
+                    <a class="list-group-item list-group-item-action" style="cursor:pointer" @click="eventTypeData('movie')">Movie</a>
+                    <a class="list-group-item list-group-item-action" style="cursor:pointer" @click="eventTypeData('work')">Work</a>
+                    <a class="list-group-item list-group-item-action" style="cursor:pointer" @click="eventTypeData('dancing')">Dancing</a>
+                    <a class="list-group-item list-group-item-action" style="cursor:pointer" @click="eventTypeData('movie')">Movie</a>
+                    <a class="list-group-item list-group-item-action" style="cursor:pointer" @click="eventTypeData('study')">Study</a>
                   </ul>  
                 </div>
               </div>
@@ -288,13 +291,8 @@
     </div>
     </div>
     <!-- Modal End -->             
-                </div>
-
-
-
-
+      </div>
     </div>
-    
 </template>
 <script>
 export default {
@@ -305,6 +303,7 @@ export default {
         startDate: "",
         endDate: ""
       },
+      SearchdataNotFound: "",
       showEventType: "",
       eventTypeModel: false,
       userLists: {},
@@ -411,10 +410,14 @@ export default {
             body: this.searchQuery
           })
           .then(response => {
-            this.events = response.data.data;
-            // this.searchQuery.searchText = "";
-            this.pagination = [];
-            vm.makePagination(response.data.meta, response.data.links);
+            if (response.data.data == "Not Found") {
+              this.SearchdataNotFound = "not found";
+            } else {
+              this.events = response.data.data;
+              // this.searchQuery.searchText = "";
+              this.pagination = [];
+              vm.makePagination(response.data.meta, response.data.links);
+            }
           })
           .catch(e => {});
       }

@@ -47,13 +47,13 @@ class EventController extends Controller
                 $count++;
                 }           
             }
-            $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(5);
-            if($userInterest){
-                foreach ($userInterest as $data) {
-                    $interst[]=$data->Interest_on;
-                    $count++;
-                }
+        $userInterest=UserInterest::where('user_id', $userId)->latest()->paginate(5);
+        if($userInterest){
+            foreach ($userInterest as $data) {
+                $interst[]=$data->Interest_on;
+                $count++;
             }
+        }
         if($count==0){
             $eventData=Event::whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
         }
@@ -89,8 +89,9 @@ class EventController extends Controller
             $eventData=Event::whereIn('eventType',[$interst[0],$interst[1],$interst[2],$interst[3],$interst[4],$interst[5],$interst[6],$interst[7]])
                     ->whereDate('eventStartDate','>=',$dateToday)->latest()->paginate(5);
         }
-
-        // return $eventData;
+        if(count($eventData)==0){
+            return Event::where('createdBy',$userId)->latest()->paginate(5);
+        }
         return EventCollection::collection($eventData);
     }
 

@@ -4,6 +4,7 @@
             <div class="col-md-11">
                 <div class="card card-default">
                     <div class="card-body">
+                        <br>
                         <div class="row justify-content-center">
                             <div class="col-md-9" v-for="(event,index) in events" :key="index" :value="event.value">
                                <div class="row justify-content-center">
@@ -42,6 +43,7 @@
 
                         <div class="row justify-content-center">
                             <div class="col-md-9">
+                                <br>
                                <div class="row justify-content-center" 
                                v-for="(schedule,index) in schedules" :key="index" :value="schedule.value">
                                     <div class="card" style="width:75%">

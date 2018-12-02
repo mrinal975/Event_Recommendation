@@ -72058,6 +72058,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -72075,7 +72076,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var data = _ref.data;
         return _this.event["goingstatus"] = data;
       });
-      axios.get("http://127.0.0.1:8000/api/totalGoing/").then(function (_ref2) {
+      axios.get("http://127.0.0.1:8000/api/totalGoing/" + eventid).then(function (_ref2) {
         var data = _ref2.data;
         return _this.event["totalGoing"] = data;
       });
@@ -72087,7 +72088,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var data = _ref3.data;
         return _this2.event["intereststatus"] = data;
       });
-      axios.get("http://127.0.0.1:8000/api/totalInterested/").then(function (_ref4) {
+      axios.get("http://127.0.0.1:8000/api/totalInterested/" + eventid).then(function (_ref4) {
         var data = _ref4.data;
         return _this2.event["totalInterested"] = data;
       });
@@ -72147,9 +72148,11 @@ var render = function() {
                               attrs: { to: "/profile/" + _vm.event.createdBy }
                             },
                             [
-                              _c("p", { staticClass: "text-center" }, [
-                                _vm._v(_vm._s(_vm.event.creatorName))
-                              ])
+                              _c(
+                                "p",
+                                { staticClass: "text-center event_creator" },
+                                [_vm._v(_vm._s(_vm.event.creatorName))]
+                              )
                             ]
                           ),
                           _vm._v(" "),
@@ -72257,6 +72260,8 @@ var render = function() {
                                   _vm._s(_vm.event.totalInterested)
                               )
                             ]),
+                            _vm._v(" "),
+                            _c("hr"),
                             _vm._v(" "),
                             _c("p", [
                               _vm._v(_vm._s(_vm.event.eventDescription))
@@ -72636,8 +72641,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -72647,6 +72650,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         startDate: "",
         endDate: ""
       },
+      SearchdataNotFound: "",
       showEventType: "",
       eventTypeModel: false,
       userLists: {},
@@ -72745,10 +72749,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.post(page_url, {
           body: this.searchQuery
         }).then(function (response) {
-          _this4.events = response.data.data;
-          // this.searchQuery.searchText = "";
-          _this4.pagination = [];
-          vm.makePagination(response.data.meta, response.data.links);
+          if (response.data.data == "Not Found") {
+            _this4.SearchdataNotFound = "not found";
+          } else {
+            _this4.events = response.data.data;
+            // this.searchQuery.searchText = "";
+            _this4.pagination = [];
+            vm.makePagination(response.data.meta, response.data.links);
+          }
         }).catch(function (e) {});
       }
     },
@@ -72903,6 +72911,8 @@ var render = function() {
       _c("div", { staticClass: "col-sm-1" }),
       _vm._v(" "),
       _c("div", { staticClass: "col-sm-10" }, [
+        _c("br"),
+        _vm._v(" "),
         _c("div", { staticClass: "input-group mb-3" }, [
           _c("input", {
             directives: [
@@ -72998,9 +73008,11 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-2" }, [
         _c("div", { staticClass: "row", staticStyle: { position: "fixed" } }, [
-          _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card leftsidebar" }, [
             _c("div", { staticClass: "card-body" }, [
-              _c("h5", { staticClass: "text-center" }, [_vm._v("User List")]),
+              _c("h5", { staticClass: "text-center class_list_custom" }, [
+                _vm._v("User List")
+              ]),
               _vm._v(" "),
               _c(
                 "div",
@@ -73034,7 +73046,7 @@ var render = function() {
                 _c(
                   "li",
                   {
-                    staticClass: "page-item",
+                    staticClass: "page-item ",
                     class: [{ disabled: !_vm.userPagination.prev_page_url }]
                   },
                   [
@@ -73048,7 +73060,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_c("i", { staticClass: "fas fa-arrow-left" })]
+                      [_c("i", { staticClass: "fas fa-arrow-left menu_left" })]
                     )
                   ]
                 ),
@@ -73067,7 +73079,7 @@ var render = function() {
                 _c(
                   "li",
                   {
-                    staticClass: "page-item",
+                    staticClass: "page-item ",
                     class: [{ disabled: !_vm.userPagination.next_page_url }]
                   },
                   [
@@ -73081,7 +73093,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_c("i", { staticClass: "fas fa-arrow-right" })]
+                      [_c("i", { staticClass: "fas fa-arrow-right menu_left" })]
                     )
                   ]
                 )
@@ -73162,11 +73174,18 @@ var render = function() {
                             "router-link",
                             { attrs: { to: "event/" + event.id } },
                             [
-                              _c("h4", { staticClass: "title" }, [
-                                _vm._v(
-                                  _vm._s(_vm._f("upText")(event.eventName))
-                                )
-                              ])
+                              _c(
+                                "h5",
+                                {
+                                  staticClass: "title",
+                                  staticStyle: { "text-decoration": "none" }
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm._f("upText")(event.eventName))
+                                  )
+                                ]
+                              )
                             ]
                           ),
                           _vm._v(" "),
@@ -73522,7 +73541,7 @@ var render = function() {
         _c("div", { staticClass: "row", staticStyle: { position: "fixed" } }, [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-body" }, [
-              _c("h5", { staticClass: "text-center" }, [
+              _c("h5", { staticClass: "text-center class_list_custom" }, [
                 _vm._v("\n                    Event Type\n                  ")
               ]),
               _vm._v(" "),
@@ -73530,7 +73549,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "list-group-item",
+                    staticClass: "list-group-item list-group-item-action",
                     staticStyle: { cursor: "pointer" },
                     on: {
                       click: function($event) {
@@ -73544,7 +73563,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "list-group-item",
+                    staticClass: "list-group-item list-group-item-action",
                     staticStyle: { cursor: "pointer" },
                     on: {
                       click: function($event) {
@@ -73558,7 +73577,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "list-group-item",
+                    staticClass: "list-group-item list-group-item-action",
                     staticStyle: { cursor: "pointer" },
                     on: {
                       click: function($event) {
@@ -73572,7 +73591,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "list-group-item",
+                    staticClass: "list-group-item list-group-item-action",
                     staticStyle: { cursor: "pointer" },
                     on: {
                       click: function($event) {
@@ -73586,7 +73605,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "list-group-item",
+                    staticClass: "list-group-item list-group-item-action",
                     staticStyle: { cursor: "pointer" },
                     on: {
                       click: function($event) {
@@ -73600,7 +73619,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "list-group-item",
+                    staticClass: "list-group-item list-group-item-action",
                     staticStyle: { cursor: "pointer" },
                     on: {
                       click: function($event) {
@@ -75369,6 +75388,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -75419,6 +75440,8 @@ var render = function() {
       _c("div", { staticClass: "col-md-11" }, [
         _c("div", { staticClass: "card card-default" }, [
           _c("div", { staticClass: "card-body" }, [
+            _c("br"),
+            _vm._v(" "),
             _c(
               "div",
               { staticClass: "row justify-content-center" },
@@ -75570,83 +75593,91 @@ var render = function() {
               _c(
                 "div",
                 { staticClass: "col-md-9" },
-                _vm._l(_vm.schedules, function(schedule, index) {
-                  return _c(
-                    "div",
-                    {
-                      key: index,
-                      staticClass: "row justify-content-center",
-                      attrs: { value: schedule.value }
-                    },
-                    [
-                      _c(
-                        "div",
-                        { staticClass: "card", staticStyle: { width: "75%" } },
-                        [
-                          _c("h2", { staticClass: "text-center top-style" }, [
-                            _vm._v(_vm._s(schedule.schedulerName))
-                          ]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "text-center" }, [
-                            _c("span", { staticClass: "time" }, [
+                [
+                  _c("br"),
+                  _vm._v(" "),
+                  _vm._l(_vm.schedules, function(schedule, index) {
+                    return _c(
+                      "div",
+                      {
+                        key: index,
+                        staticClass: "row justify-content-center",
+                        attrs: { value: schedule.value }
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "card",
+                            staticStyle: { width: "75%" }
+                          },
+                          [
+                            _c("h2", { staticClass: "text-center top-style" }, [
+                              _vm._v(_vm._s(schedule.schedulerName))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-center" }, [
+                              _c("span", { staticClass: "time" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventTime")(
+                                      schedule.schedulerStartTime
+                                    )
+                                  )
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-center" }, [
+                              _c("span", { staticClass: "day" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventDate")(
+                                      schedule.schedulerStartDate
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "month" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventMonth")(
+                                      schedule.schedulerStartDate
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "year" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("EventYear")(
+                                      schedule.schedulerStartDate
+                                    )
+                                  )
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-center" }, [
                               _vm._v(
                                 _vm._s(
-                                  _vm._f("EventTime")(
-                                    schedule.schedulerStartTime
+                                  _vm._f("Des")(
+                                    _vm._f("upText")(
+                                      schedule.schedulerDescription
+                                    )
                                   )
                                 )
                               )
                             ])
-                          ]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "text-center" }, [
-                            _c("span", { staticClass: "day" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm._f("EventDate")(
-                                    schedule.schedulerStartDate
-                                  )
-                                )
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "month" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm._f("EventMonth")(
-                                    schedule.schedulerStartDate
-                                  )
-                                )
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "year" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm._f("EventYear")(
-                                    schedule.schedulerStartDate
-                                  )
-                                )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "text-center" }, [
-                            _vm._v(
-                              _vm._s(
-                                _vm._f("Des")(
-                                  _vm._f("upText")(
-                                    schedule.schedulerDescription
-                                  )
-                                )
-                              )
-                            )
-                          ])
-                        ]
-                      )
-                    ]
-                  )
-                })
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
               )
             ])
           ])
@@ -75718,10 +75749,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
 //
 //
 //
@@ -76264,7 +76291,7 @@ var render = function() {
                       _c("div", { staticClass: "profile-img" }, [
                         _c("img", {
                           attrs: {
-                            alt: "Profile Picture",
+                            alt: "Profile Picture img-thumbnail",
                             src: _vm.showProfileImage(_vm.user.image)
                           }
                         })
@@ -76279,7 +76306,7 @@ var render = function() {
                         _c("h4", [
                           _vm._v(
                             "\n                                      " +
-                              _vm._s(_vm.user.name) +
+                              _vm._s(_vm._f("upText")(_vm.user.name)) +
                               "\n                                  "
                           )
                         ]),
@@ -76508,7 +76535,11 @@ var render = function() {
                       _c("div", { staticClass: "profile-work" }, [
                         _c("br"),
                         _vm._v(" "),
-                        _c("h4", [_vm._v("Interest list")]),
+                        _c(
+                          "h4",
+                          { staticClass: "class_list_custom text-center" },
+                          [_vm._v("Interest list")]
+                        ),
                         _vm._v(" "),
                         _c(
                           "table",
@@ -76628,7 +76659,11 @@ var render = function() {
                                 _vm._m(2),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-md-6" }, [
-                                  _c("p", [_vm._v(_vm._s(_vm.user.name))])
+                                  _c("p", [
+                                    _vm._v(
+                                      _vm._s(_vm._f("upText")(_vm.user.name))
+                                    )
+                                  ])
                                 ])
                               ]),
                               _vm._v(" "),
@@ -76783,7 +76818,7 @@ var render = function() {
                                         _c(
                                           "label",
                                           { attrs: { for: "name" } },
-                                          [_vm._v("Name")]
+                                          [_vm._v("Name ")]
                                         ),
                                         _vm._v(" "),
                                         _c("input", {
@@ -77242,7 +77277,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-2" }, [
-      _c("label", [_vm._v("Name")])
+      _c("label", [_vm._v("Name :")])
     ])
   },
   function() {
@@ -77250,7 +77285,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-2" }, [
-      _c("label", [_vm._v("Email")])
+      _c("label", [_vm._v("Email :")])
     ])
   },
   function() {
@@ -77258,7 +77293,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-2" }, [
-      _c("label", [_vm._v("Phone")])
+      _c("label", [_vm._v("Phone :")])
     ])
   },
   function() {
